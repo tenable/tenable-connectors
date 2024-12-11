@@ -1,0 +1,9 @@
+.DS_Store
+.venv
+*.pyc
+mocks
+__pycache__
+*.db
+.coverage
+.env
+.secrets

@@ -40,6 +40,8 @@ amd64 = "gitea.tenalab.online/tif/connector-crowdstrike2tone"
 [tool.uv]
 dev-dependencies = [
     "ptpython>=3.0.29",
+    "pytest>=8.3.3",
+    "responses>=0.25.3"
     "pyright>=1.1.386",
     "ruff>=0.7.1",
 ]

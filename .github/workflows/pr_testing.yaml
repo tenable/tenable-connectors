@@ -63,3 +63,14 @@ jobs:
           only-severities: critical,high,medium
           ignore-unchanged: true
           ignore-base: true
+
+      - name: Login to Artifactory
+        run: docker login --username svc_terrascan --password ${{ secrets.ARTIFACTORY_API_TOKEN }}  https://docker-terrascan-local.artifactory.eng.tenable.com
+
+      - name: Build latest docker image
+        run: make docker-build-push-latest
+        env:
+          MULTIPLATFORM: true
+
+      - name: Pull Image
+        run:  docker pull docker-terrascan-local.artifactory.eng.tenable.com/tenb-cb:latest

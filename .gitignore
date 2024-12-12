@@ -6,4 +6,6 @@ __pycache__
 *.db
 .coverage
 .env
+.vars
 .secrets
+requirements.txt

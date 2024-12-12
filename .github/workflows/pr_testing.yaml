@@ -16,6 +16,29 @@ jobs:
         run: |
            echo "connectors=$(ls connectors | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
 
+  security-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: yezz123/setup-uv@v4
+      - uses: snyk/actions/setup@master
+      - name: Export and install all requirements for Snyk
+        run: |
+          for connector in $(ls connectors);do
+            uv pip compile connectors/${connector}/pyproject.toml -o connectors/${connector}/requirements.txt
+            pip3 install -r connectors/${connector}/requirements.txt
+          done
+
+      - name: Snyk Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test --all-projects --command=python3 --skip-unresolved=true
+
   test-build:
     name: connector ${{ matrix.connector }}
     runs-on: ubuntu-latest
@@ -45,7 +68,6 @@ jobs:
             --progress plain \
             --no-cache \
             --target release \
-            --tag connector \
             --tag tenable-connectors/connector-${{ matrix.connector }}:latest \
             --tag tenable-connectors/connector-${{ matrix.connector }}:${CON_VERSION}
 
@@ -58,8 +80,8 @@ jobs:
       - name: Docker Scout
         uses: docker/scout-action@v1
         with:
-          command: cves,recommendations,compare
-          image: connector
+          command: cves,recommendations
+          image: tenable-connectors/connector-${{ matrix.connector }}
           only-severities: critical,high,medium
           ignore-unchanged: true
           ignore-base: true

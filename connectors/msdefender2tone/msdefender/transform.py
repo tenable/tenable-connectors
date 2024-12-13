@@ -4,10 +4,9 @@ from typing import Any
 from uuid import UUID, uuid3
 
 import arrow
+from msdefender import MSDefenderAPI
 from restfly.utils import trunc
 from tenable.io import TenableIO
-
-from msdefender import MSDefenderAPI
 
 
 class Transformer:
@@ -25,7 +24,7 @@ class Transformer:
 
     def run(self, get_findings: bool = True) -> None:
         with self.tvm.sync.create(
-            sync_id='tenable_microsoft_defender', vendor='tenable', sensor='msdefender'
+            sync_id='tenable_microsoft_defender', vendor='microsoft', sensor='defender'
         ) as job:
             for asset in self.defender.assets.list():
                 t1asset = self.transform_asset(asset)

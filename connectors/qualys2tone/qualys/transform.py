@@ -50,8 +50,8 @@ class Transformer:
         """
         with self.tvm.sync.create(
             sync_id='tenable_qualys_vm',
-            vendor='tenable',
-            sensor='qualysguard',
+            vendor='qualys',
+            sensor='vm',
         ) as job:
             self.log.info('Processing Qualys assets')
             self.log.debug(f'sync_id: {job.sync_id} uuid: {job.uuid}')

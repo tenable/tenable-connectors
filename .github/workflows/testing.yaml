@@ -1,0 +1,117 @@
+name: Testing Pipeline
+
+#on:
+#  pull_request:
+#    types: [assigned, opened, synchronize, reopened, ready_for_review]
+on: [push]
+
+
+jobs:
+  connector-list:
+    runs-on: ubuntu-latest
+    outputs:
+      connectors: ${{ steps.list.outputs.connectors }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect Connector list
+        id: list
+        run: |
+          CONNECTORS=()
+          for connector in $(ls connectors);do
+            if [ "$( git diff --name-only main connectors/${connector} )" != "" ] || [ "$( git diff --name-only main base )" != "" ] || [ "${{ vars.BUILD_ALL_CONNECTORS }}" == "true" ];then
+              CONNECTORS+=("${connector}")
+            fi
+          done
+          echo "connectors=$(echo -n "${CONNECTORS[@]}" | jq -R -s -c 'split(" ")')" >> $GITHUB_OUTPUT
+
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: snyk/actions/setup@master
+      - uses: astral-sh/setup-uv@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Export requirements file for Snyk
+        run: |
+          for connector in connectors/*/;do
+            connector=${connector%*/}
+            uv pip compile ${connector}/pyproject.toml -o ${connector}/requirements.txt --system
+            uv pip install -r ${connector}/requirements.txt --system
+          done
+          which python
+
+      - name: Run Snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          cat .snyk
+          snyk test --all-projects --policy-path=.snyk
+
+
+  test-build:
+    name: connector ${{ matrix.connector }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [connector-list, snyk]
+    strategy:
+      matrix:
+        connector: ${{ fromJSON(needs.connector-list.outputs.connectors) }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install TOML Tools
+        run: pip install toml-cli
+
+      - name: Create Build Environment
+        id: build
+        run: |
+          mkdir build
+          cp -a connectors/${{ matrix.connector }}/* build/
+          cp base/* build/
+          cp base/.dockerignore build/
+          echo "version=$(toml get --toml-path build/pyproject.toml project.version)" >> $GITHUB_OUTPUT
+          echo "app_id=$(cat build/APP_ID)" >> $GITHUB_OUTPUT
+          echo "name=tenable-connectors/connector-${{ matrix.connector }}" >> $GITHUB_OUTPUT
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build Image Meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            connector-${{ matrix.connector }}
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=semver,pattern={{version}},value=${{ steps.build.outputs.version }}
+            type=sha
+            
+      
+      - name: Build Connector
+        uses: docker/build-push-action@v6
+        with:
+          context: build
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          load: true
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Scout
+        uses: docker/scout-action@v1
+        with:
+          image: connector-${{ matrix.connector }}
+          command: cves,recommendations
+          only-severities: critical,high,medium
+          ignore-unchanged: true
+          ignore-base: true

@@ -10,4 +10,3 @@ __pycache__
 .secrets
 .vars
 requirements.txt
-.vars

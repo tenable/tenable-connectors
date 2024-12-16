@@ -7,7 +7,6 @@ FROM connector-base AS build
 ADD --chown=connector:connector ./ /connector/
 RUN uv pip install --system -r /connector/pyproject.toml
 
-
 FROM build AS test
 WORKDIR /connector/
 RUN uv pip install --system "tenint[testing]" \

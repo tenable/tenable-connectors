@@ -1,8 +1,10 @@
 name: Testing Pipeline
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+#on:
+#  pull_request:
+#    types: [assigned, opened, synchronize, reopened, ready_for_review]
+on: [push]
+
 
 jobs:
   connector-list:
@@ -78,7 +80,7 @@ jobs:
 
       - name: Build Image Meta
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: |
             connector-${{ matrix.connector }}

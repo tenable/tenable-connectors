@@ -75,7 +75,7 @@ jobs:
 
       - name: Build Image Meta
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: |
             connector-${{ matrix.connector }}

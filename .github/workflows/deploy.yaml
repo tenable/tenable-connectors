@@ -140,6 +140,7 @@ jobs:
           }
           END
           )
+          echo $DATA
           docker run \
             -e JKN_USERNAME="${{ secrets.JKN_USERNAME }}" \
             -e JKN_PASSWORD="${{ secrets.JKN_PASSWORD }}" \

@@ -129,7 +129,7 @@ jobs:
         run: docker pull docker-terrascan-local.artifactory.eng.tenable.com/tenb-cb:latest
 
       - name: Publish Dockerhub
-        run: |
+        run:
           docker run \
           -e JKN_USERNAME=${{ secrets.JKN_USERNAME }} \
           -e JKN_PASSWORD=${{ secrets.JKN_PASSWORD }} \

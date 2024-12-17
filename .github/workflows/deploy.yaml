@@ -150,4 +150,4 @@ jobs:
             -n teams-deleng-terraform \
             -p deleng-terraform/dockerhub-publish \
             --cloudflare-access-secret "${{ secrets.CF_ACCESS_TOKEN }}:${{ secrets.CF_SECRET }}"
-            -d "${DATA}"
+            -d "{\"APPID\":\"2379\", \"IMAGE\":\"docker-terrascan-local.artifactory.eng.tenable.com/connector-qualys2tone:latest\", \"TARGETS\": \"tenable/tenable-connectors:latest\", \"MULTIARCH\":\"true\"}" 

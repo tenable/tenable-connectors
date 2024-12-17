@@ -2,10 +2,9 @@
 import logging
 from typing import Annotated
 
+from crowdstrike.transform import Transformer
 from pydantic import AnyHttpUrl, Field, SecretStr
 from tenint import Connector, Credential, Settings, TenableVMCredential
-
-from crowdstrike.transform import Transformer
 
 
 class CrowdstrikeCredential(Credential):
@@ -30,7 +29,7 @@ class AppSettings(Settings):
 
     debug: Annotated[bool, Field(title='Debug')] = False
     last_seen_days: Annotated[
-        int, Field(title='How many days back to get assets/findings')
+        int, Field(title='How many days back to get assets/findings', ge=1, le=7)
     ] = 1
     import_findings: Annotated[bool, Field(title='Import Findings')] = False
 

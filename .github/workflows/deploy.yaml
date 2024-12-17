@@ -136,5 +136,5 @@ jobs:
           -t docker-terrascan-local.artifactory.eng.tenable.com/tenb-cb:latest jobs execute-job  \
           --credential-mode env -n teams-deleng-terraform \
           -p deleng-terraform/dockerhub-publish \
-          -d "{\"APPID\":\"${{ steps.build.outputs.app_id }}\", \"IMAGE\":\"docker-terrascan-local.artifactory.eng.tenable.com/connector-${{ matrix.connector }}:latest\", \"TARGETS\": \"tenable/tenable-connectors:latest\", \"MULTIARCH\":\"true\"}" --cloudflare-access-secret ${{ secrets.CF_ACCESS_TOKEN }}:${{ secrets.CF_SECRET }
+          -d "{\"APPID\":\"${steps.build.outputs.app_id}\", \"IMAGE\":\"docker-terrascan-local.artifactory.eng.tenable.com/connector-${matrix.connector}:latest\", \"TARGETS\": \"tenable/tenable-connectors:latest\", \"MULTIARCH\":\"true\"}" --cloudflare-access-secret ${secrets.CF_ACCESS_TOKEN}:${{ secrets.CF_SECRET }
           

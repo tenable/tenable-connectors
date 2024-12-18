@@ -73,16 +73,6 @@ jobs:
 
       - name: Publish Connector Image
         run: |
-          #  "TARGETS": "${{ steps.build.outputs.name }}:latest,${{ steps.build.outputs.name }}:${{ steps.build.outputs.version }}"
-          DATA=$(cat <<-END
-          {
-            "APP_ID": "${{ steps.build.outputs.app_id }}",
-            "IMAGE": "docker-terrascan-local.artifactory.eng.tenable.com/connector-${{ matrix.connector }}:latest",
-            "TARGETS": "tenable/tenable-connectors:latest",
-            "MULTIARCH": "true"
-          }
-          END
-          )
           docker run \
             -e JKN_USERNAME="${{ secrets.JKN_USERNAME }}" \
             -e JKN_PASSWORD="${{ secrets.JKN_PASSWORD }}" \

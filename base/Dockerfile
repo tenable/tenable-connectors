@@ -1,5 +1,5 @@
 FROM python:3.12-alpine AS connector-base
-RUN pip install uv && uv pip install --system tenint
+RUN pip install uv && uv pip install --system "tenint==0.1.6"
 RUN addgroup -S connector && adduser connector -S -G connector -h /connector
 
 

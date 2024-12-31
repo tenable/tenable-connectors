@@ -10,3 +10,4 @@ __pycache__
 .secrets
 .vars
 requirements.txt
+/build.sh

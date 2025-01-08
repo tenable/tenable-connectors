@@ -77,6 +77,7 @@ docstring-code-line-length = "dynamic"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+addopts = "--cov=crowdstrike --cov-report=term-missing"
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]

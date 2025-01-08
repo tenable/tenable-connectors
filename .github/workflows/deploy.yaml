@@ -54,6 +54,7 @@ jobs:
     continue-on-error: true
     needs: [connector-list, snyk]
     strategy:
+      max-parallel: 1
       matrix:
         connector: ${{ fromJSON(needs.connector-list.outputs.connectors) }}
 

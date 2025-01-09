@@ -1,5 +1,5 @@
 {
-    "2379" : { "type": "python", "jobPath": "connectors/qualys2tone" },
+    "2379" : { "type": "python", "jobPath": "connectors/qualys2tone" }, 
     "2378" : { "type": "python", "jobPath": "connectors/msdefender2tone" },
     "2376" : { "type": "python", "jobPath": "connectors/crowdstrike2tone" },
     "2377" : { "type": "python", "jobPath": "connectors/sentinelone" }

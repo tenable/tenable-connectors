@@ -1,9 +1,8 @@
 name: Deployment Pipeline
 
 on:
-  pull_request:
+  push:
     branches: [main]
-    types: [closed]
 
 jobs:
   connector-list:
@@ -12,12 +11,14 @@ jobs:
       connectors: ${{ steps.list.outputs.connectors }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Collect Connector list
         id: list
         run: |
           CONNECTORS=()
           for connector in $(ls connectors);do
-            if [ "$( git diff --name-only main connectors/${connector} )" != "" ] || [ "$( git diff --name-only main base )" != "" ];then
+            if [ "$( git diff --name-only HEAD~1 -- connectors/${connector} )" != "" ] || [ "$( git diff --name-only HEAD~1 -- base )" != "" ] || [ "${{ vars.BUILD_ALL_CONNECTORS }}" == "true" ];then
               CONNECTORS+=("${connector}")
             fi              
           done
@@ -48,12 +49,12 @@ jobs:
           snyk monitor --all-projects --policy-path=.snyk
 
   build-and-deploy:
-    if: ${{ github.event.pull_request.merged }}
     name: connector ${{ matrix.connector }}
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: [connector-list, snyk]
     strategy:
+      max-parallel: 1
       matrix:
         connector: ${{ fromJSON(needs.connector-list.outputs.connectors) }}
 
@@ -71,22 +72,39 @@ jobs:
           cp base/.dockerignore build/
           echo "version=$(toml get --toml-path build/pyproject.toml project.version)" >> $GITHUB_OUTPUT
           echo "app_id=$(cat build/APP_ID)" >> $GITHUB_OUTPUT
-          echo "name=tenable-connectors/connector-${{ matrix.connector }}" >> $GITHUB_OUTPUT
+          echo "name=tenable/connector-${{ matrix.connector }}" >> $GITHUB_OUTPUT
 
+      - uses: docker/setup-docker-action@v4
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to Artifactory
+        uses: docker/login-action@v3
+        with:
+          registry: docker-terrascan-local.artifactory.eng.tenable.com
+          username: svc_terrascan
+          password: ${{ secrets.ARTIFACTORY_API_TOKEN }}
+  
       - name: Build Image Meta
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
-            connector-${{ matrix.connector }}
+            docker-terrascan-local.artifactory.eng.tenable.com/connector-${{ matrix.connector }}
           tags: |
             type=schedule
             type=ref,event=branch
             type=semver,pattern={{version}},value=${{ steps.build.outputs.version }}
             type=sha
       
-      - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
       - name: Build Connector
         uses: docker/build-push-action@v6
         with:
@@ -94,6 +112,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          push: true
           sbom: true
           provenance: true
           load: true
@@ -108,32 +127,27 @@ jobs:
         uses: docker/scout-action@v1
         with:
           command: cves,recommendations
-          image: tenable-connectors/connector-${{ matrix.connector }}
+          image: docker-terrascan-local.artifactory.eng.tenable.com/connector-${{ matrix.connector }}
           only-severities: critical,high,medium
           ignore-unchanged: true
           ignore-base: true
-
-      - name: Login to Artifactory
-        uses: docker/login-action@v3
-        with:
-          registry: docker-terrascan-local.artifactory.eng.tenable.com
-          username: ${{ vars.ARTIFACTORY_USERNAME }}
-          password: ${{ secrets.ARTIFACTORY_API_TOKEN }}
 
       - name: Pull Deployment Image
         run: docker pull docker-terrascan-local.artifactory.eng.tenable.com/tenb-cb:latest
 
       - name: Publish Connector Image
         run: |
+          #  "TARGETS": "${{ steps.build.outputs.name }}:latest,${{ steps.build.outputs.name }}:${{ steps.build.outputs.version }}"
           DATA=$(cat <<-END
           {
-            "APP_ID": "${{ steps.build.outputs.app_id }}",
+            "APPID": "${{ steps.build.outputs.app_id }}",
             "IMAGE": "docker-terrascan-local.artifactory.eng.tenable.com/connector-${{ matrix.connector }}:latest",
-            "TARGETS": "${{ steps.build.outputs.name }}:latest,${{ steps.build.outputs.name }}:${{ steps.build.outputs.version }}"
+            "TARGETS": "tenable/connector-${{ matrix.connector }}:latest,tenable/connector-${{ matrix.connector }}:${{ steps.build.outputs.version }}",
             "MULTIARCH": "true"
           }
           END
           )
+          echo "${DATA}"
           docker run \
             -e JKN_USERNAME="${{ secrets.JKN_USERNAME }}" \
             -e JKN_PASSWORD="${{ secrets.JKN_PASSWORD }}" \
@@ -142,6 +156,6 @@ jobs:
             --credential-mode env \
             -n teams-deleng-terraform \
             -p deleng-terraform/dockerhub-publish \
-            --cloudflare-access-secret "${{ secrets.CF_ACCESS_TOKEN }}:${{ secrets.CF_SECRET }}"
+            --cloudflare-access-secret "${{ secrets.CF_ACCESS_TOKEN }}:${{ secrets.CF_SECRET }}" \
             -d "${DATA}"
           

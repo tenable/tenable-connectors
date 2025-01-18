@@ -1,6 +1,7 @@
 import ipaddress
 import logging
 from copy import deepcopy
+from hashlib import sha256
 from typing import Any
 
 import arrow
@@ -74,7 +75,7 @@ class Transformer:
                     )
                     self.log.debug(
                         'Adding finding id=%s to asset id=%s'
-                        % (t1finding['id'], t1finding['asset_id'])
+                        % (t1finding.get('id'), t1finding.get('asset_id'))
                     )
                     job.add(t1finding, object_type='cve-finding')
                     count += 1
@@ -130,7 +131,7 @@ class Transformer:
                 if endpoint.get('osSTartTime')
                 else None,
             },
-            'external_ids': [{'qualifier': 's1_uuid', 'value': endpoint['uuid']}],
+            'external_ids': [{'qualifier': 'endpoint-uuid', 'value': endpoint['uuid']}],
             'discovery': {
                 'authentication': {
                     'attempted': endpoint.get('scanStartedAt') is not None,
@@ -193,6 +194,9 @@ class Transformer:
         """
         ret = deepcopy(base_finding)
         ret['asset_id'] = str(endpoint['endpointId'])
+        ret['id'] = sha256(
+            f'{ret["asset_id"]}::{ret["id"]}'.encode('utf-8')
+        ).hexdigest()
         ret['discovery'] = {
             'first_observed_at': arrow.get(
                 endpoint['applicationDetectionDate']
@@ -238,6 +242,7 @@ class Transformer:
         resp = {
             'object_type': 'cve-finding',
             'state': 'ACTIVE',
+            'id': app['applicationId'],
             'cve': {'cves': cves[:512]},
             'exposure': {'severity': {'level': sev_switch.get(severity)}},
         }

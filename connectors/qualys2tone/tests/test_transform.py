@@ -78,8 +78,8 @@ def test_asset_transformer(transformer):
             'operating_system': {'type': 'WINDOWS'},
         },
         'external_ids': [
-            {'qualifier': 'asset_id', 'value': '12345'},
-            {'qualifier': 'qg_hostid', 'value': '3cde24a7-aabb-ccdd-eeff-001122334455'},
+            {'qualifier': 'asset-id', 'value': '12345'},
+            {'qualifier': 'qg-hostid', 'value': '3cde24a7-aabb-ccdd-eeff-001122334455'},
         ],
         'discovery': {
             'authentication': {

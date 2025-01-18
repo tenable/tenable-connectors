@@ -100,7 +100,7 @@ class Transformer:
         self,
         data: dict[str, Any],
         asset_id: int,
-        max_cves: int = 128,
+        max_cves: int = 512,
     ) -> dict[str, Any]:
         """
         Converts the raw Qualys finding into a T1-compatable cve-finding.
@@ -119,13 +119,13 @@ class Transformer:
                 .one()
             )
             if len(kb.cves) == 0:
-                self.log.info(
+                self.log.debug(
                     'Dropping asset=%s, finding=%s as there are no known cves.'
                     % (data['id'], asset_id)
                 )
                 return {}
             elif len(kb.cves) > max_cves:
-                self.log.info(
+                self.log.debug(
                     'Truncating the first %s of %s cves for qid=%s due to T1 API restrictions.'
                     % (max_cves, len(kb.cves), data['qid'])
                 )
@@ -178,7 +178,9 @@ class Transformer:
         external_ids = []
         for key in ('asset_id', 'qg_hostid'):
             if data.get(key):
-                external_ids.append({'qualifier': key, 'value': str(data.get(key))})
+                external_ids.append(
+                    {'qualifier': key.replace('_', '-'), 'value': str(data.get(key))}
+                )
         return {
             'object_type': 'device-asset',
             'asset_class': 'DEVICE',

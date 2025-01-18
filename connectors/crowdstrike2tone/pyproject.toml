@@ -1,6 +1,6 @@
 [project]
 name = "crowdstrike2tone"
-version = "0.9.1"
+version = "0.9.2"
 description = "Crowdstrike -> Tenable One"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -34,8 +34,6 @@ title = "CrowdStrike to Tenable One"
 tags = ["crowdstrike", "tvm"]
 timeout = 3600
 
-[tool.tenint.connector.images]
-amd64 = "gitea.tenalab.online/tif/connector-crowdstrike2tone"
 
 [tool.uv]
 dev-dependencies = [
@@ -55,7 +53,8 @@ exclude = [
   ".github",
   ".git",
   ".pytest_cache",
-  "__pycache__"
+  "__pycache__",
+  ".venv",
 ]
 
 [tool.ruff.lint]
@@ -78,6 +77,7 @@ docstring-code-line-length = "dynamic"
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "--cov=crowdstrike --cov-report=term-missing"
+filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]

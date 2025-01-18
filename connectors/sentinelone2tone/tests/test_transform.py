@@ -63,6 +63,7 @@ def test_asset_transformer(transformer, agent):
 def test_finding_transformer(transformer, app):
     finding = transformer.finding_transformer(app, ['CVE-2012-6655'], severity=3)
     assert finding == {
+        'id': '1807951750242764456',
         'object_type': 'cve-finding',
         'state': 'ACTIVE',
         'cve': {'cves': ['CVE-2012-6655']},
@@ -82,6 +83,7 @@ def test_finding_endpoint_transformer(transformer, app, endpoint):
     base_finding = transformer.finding_transformer(app, ['CVE-2012-6655'], 3)
     finding = transformer.finding_endpoint_transformer(base_finding, endpoint)
     assert finding == {
+        'id': 'c0ca7db0586b36a250da3c5ec7f0694f2a82acda72f1b49ea537acca1823db45',
         'object_type': 'cve-finding',
         'state': 'ACTIVE',
         'cve': {'cves': ['CVE-2012-6655']},

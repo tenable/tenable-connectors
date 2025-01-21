@@ -2,9 +2,10 @@
 import logging
 from typing import Annotated
 
-from crowdstrike.transform import Transformer
 from pydantic import AnyHttpUrl, Field, SecretStr
 from tenint import Connector, Credential, Settings, TenableVMCredential
+
+from crowdstrike.transform import Transformer
 
 
 class CrowdstrikeCredential(Credential):
@@ -18,7 +19,7 @@ class CrowdstrikeCredential(Credential):
     description: str = 'Crowdstrike API Credential'
     client_id: str
     client_secret: SecretStr
-    member_cid: str
+    member_cid: str | None = None
     url: AnyHttpUrl
 
 

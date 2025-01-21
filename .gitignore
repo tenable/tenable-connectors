@@ -9,5 +9,6 @@ __pycache__
 .vars
 .secrets
 .vars
+.vagrant
 requirements.txt
 /build.sh

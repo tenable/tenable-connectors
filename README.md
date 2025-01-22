@@ -50,3 +50,39 @@ minimum meet are the following:
 ## How to develop a connector
 
 **NOTE** Will be written when we're ready to start accepting outside written integrations
+
+## Running the testing TIF instance
+
+There is an included vagrant file to help enable quick testing of connector images. This VM image exposes Cockpit on
+port `9090` and can be interfaced by pointing a web browser to `https://localhost:9090`. A random root password is
+also generated and presented as the last line in the setup process for the VM. Look for a line in the provisioning
+output that looks like:
+
+```
+default: root password is set to 'ZDU3OTU5OWZjZTE0YTkxZTU3ZjJhMjEw'
+```
+
+### Initial Install and Setup on MacOS
+
+1. Install `brew`
+2. Install QEMU `brew install qemu libvirt`
+3. Install Vagrant `brew install --cask vagrant`
+4. Install the Vagrant QEMU plugin `vagrant plugin install vagrant-qemu`
+
+### Deploying a new VM
+
+```
+vagrant up --provider=qemu
+```
+
+### Stopping the VM
+
+```
+vagrant halt
+```
+
+### Destroying the VM
+
+```
+vagrant destroy
+```

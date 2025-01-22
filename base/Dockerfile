@@ -4,7 +4,7 @@
 FROM python:3.12-alpine AS connector-base
 
 ARG UV_SYSTEM_PYTHON=true
-RUN pip install uv && uv pip install "tenint==0.9.2"
+RUN pip install uv && uv pip install "tenint==0.9.3"
 
 
 # Connector Build Stage

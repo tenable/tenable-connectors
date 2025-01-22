@@ -36,7 +36,7 @@ connector = Connector(
 
 
 @connector.job
-def main(config: AppSettings):
+def main(config: AppSettings, since: int | None = None):
     """
     Qualys to Tenable One Connector
     """

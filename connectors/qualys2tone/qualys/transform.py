@@ -16,6 +16,7 @@ class Transformer:
     Main Qualys to TenableOne data transformer.
     """
 
+    counts: dict[str, dict[str, int]]
     db: tuple
 
     def __init__(
@@ -36,6 +37,7 @@ class Transformer:
         self.tvm = tvm if tvm else TenableIO()
         self.qualys = qualys if qualys else QualysAPI()
         self.log = logging.getLogger('Transformer')
+        self.counts = {}
 
     def run(self, get_kbs: bool = True, get_findings: bool = True):
         """
@@ -48,11 +50,13 @@ class Transformer:
             get_findings:
                 Should we get findings as well as asset metadata?
         """
-        with self.tvm.sync.create(
+        job = self.tvm.sync.create(
             sync_id='tenable_qualys_vm',
             vendor='qualys',
             sensor='vm',
-        ) as job:
+        )
+
+        with job:
             self.log.info('Processing Qualys assets')
             self.log.debug(f'sync_id: {job.sync_id} uuid: {job.uuid}')
             for asset in self.qualys.assets.vuln():
@@ -75,6 +79,10 @@ class Transformer:
                             % (finding['id'], host['id'])
                         )
                         job.add(finding, object_type='cve-finding')
+
+        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
+        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
+        return self.counts
 
     def cache_knowledgebase(self) -> None:
         """

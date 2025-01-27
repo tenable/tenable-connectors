@@ -11,6 +11,7 @@ from sentinelone import SentinelOneAPI
 
 
 class Transformer:
+    counts: dict[str, dict[str, int]]
     app_ids: list[int] = []
 
     def __init__(
@@ -28,6 +29,7 @@ class Transformer:
         self.tvm = tvm if tvm else TenableIO()
         self.s1 = s1 if s1 else SentinelOneAPI()
         self.log = logging.getLogger('Transformer')
+        self.counts = {}
 
     def run(self, get_findings: bool = True) -> None:
         """
@@ -42,11 +44,13 @@ class Transformer:
         #       all be adjusted at a later date when SentinelOne comes back to us with
         #       an improved export API that doesn't require the call volume that is
         #       currently necessary.
-        with self.tvm.sync.create(
+        job = self.tvm.sync.create(
             sync_id='tenable_sentinel_one_singularity',
             vendor='sentinel-one',
             sensor='singularity',
-        ) as job:
+        )
+
+        with job:
             self.log.info('Collecting assets')
             count = 0
             for asset in self.s1.assets.list():
@@ -80,6 +84,10 @@ class Transformer:
                     job.add(t1finding, object_type='cve-finding')
                     count += 1
             self.log.info(f'Imported {count} findings.')
+
+        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
+        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
+        return self.counts
 
     def get_os_type(self, value: str | None) -> str | None:
         """

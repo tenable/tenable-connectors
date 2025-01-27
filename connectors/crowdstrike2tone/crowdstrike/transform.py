@@ -3,12 +3,15 @@ import logging
 from typing import Any
 
 import arrow
-from crowdstrike import CrowdStrikeAPI
 from restfly.utils import trunc
 from tenable.io import TenableIO
 
+from crowdstrike import CrowdStrikeAPI
+
 
 class Transformer:
+    counts: dict[str, dict[str, int]]
+
     def __init__(
         self,
         tvm: TenableIO | None = None,
@@ -18,13 +21,15 @@ class Transformer:
         self.tvm = tvm if tvm else TenableIO()
         self.crwd = crwd if crwd else CrowdStrikeAPI()
         self.log = logging.getLogger('Transformer')
+        self.counts = {}
 
     def run(self, get_findings: bool = True, last_seen_days: int = 1) -> None:
-        with self.tvm.sync.create(
+        job = self.tvm.sync.create(
             sync_id='tenable_crowdstrike_falcon',
             vendor='crowd-strike',
             sensor='falcon',
-        ) as job:
+        )
+        with job:
             for asset in self.crwd.assets.list(last_seen_days=last_seen_days):
                 t1asset = self.transform_asset(asset)
                 self.log.debug('Adding asset id=%s to the job' % t1asset['id'])
@@ -39,6 +44,11 @@ class Transformer:
             #        % (finding['id'], vuln['machineId'])
             #    )
             #    job.add(finding, object_type='cve-finding')
+
+        # Lastly we will update the asset and findings counters and return the counts.
+        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
+        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
+        return self.counts
 
     def derive_system_type(self, system_type: str) -> str:
         """

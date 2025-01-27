@@ -4,13 +4,15 @@ from typing import Any
 from uuid import UUID, uuid3
 
 import arrow
-from msdefender import MSDefenderAPI
 from restfly.utils import trunc
 from tenable.io import TenableIO
+
+from msdefender import MSDefenderAPI
 
 
 class Transformer:
     NAMESPACE = UUID('25ba1ea7-4bca-413c-9629-f16c54bd0f12')
+    counts: dict[str, dict[str, int]]
 
     def __init__(
         self,
@@ -21,11 +23,14 @@ class Transformer:
         self.tvm = tvm if tvm else TenableIO()
         self.defender = defender if defender else MSDefenderAPI()
         self.log = logging.getLogger('Transformer')
+        self.counts = {}
 
     def run(self, get_findings: bool = True) -> None:
-        with self.tvm.sync.create(
+        job = self.tvm.sync.create(
             sync_id='tenable_microsoft_defender', vendor='microsoft', sensor='defender'
-        ) as job:
+        )
+
+        with job:
             for asset in self.defender.assets.list():
                 t1asset = self.transform_asset(asset)
                 self.log.debug('Adding asset id=%s to the job' % t1asset['id'])
@@ -39,6 +44,10 @@ class Transformer:
                     % (finding['id'], vuln['machineId'])
                 )
                 job.add(finding, object_type='cve-finding')
+
+        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
+        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
+        return self.counts
 
     def get_network_info(self, data: dict[str, Any]) -> dict[str, list[str]]:
         """

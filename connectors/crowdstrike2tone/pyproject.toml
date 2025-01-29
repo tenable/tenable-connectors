@@ -1,6 +1,6 @@
 [project]
 name = "crowdstrike2tone"
-version = "0.9.6"
+version = "0.9.7"
 description = "Crowdstrike -> Tenable One"
 readme = "README.md"
 requires-python = ">=3.12"

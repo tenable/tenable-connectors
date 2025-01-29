@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import logging
 from typing import Annotated
 
 from pydantic import AnyHttpUrl, Field, SecretStr
@@ -27,7 +26,6 @@ class AppSettings(Settings):
     Qualys2TOne Connector Settings
     """
 
-    debug: Annotated[bool, Field(title='Debug')] = False
     import_findings: Annotated[bool, Field(title='Import Findings')] = True
 
 
@@ -41,8 +39,6 @@ def main(config: AppSettings, since: int | None = None):
     """
     Qualys to Tenable One Connector
     """
-    if config.debug:
-        logging.getLogger().setLevel('DEBUG')
     transformer = Transformer()
     counts = transformer.run(get_findings=config.import_findings)
     return {'counts': counts}

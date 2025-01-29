@@ -1,6 +1,6 @@
 [project]
 name = "qualys2tone"
-version = "0.9.6"
+version = "0.9.7"
 description = "Qualys VM to Tenable One"
 readme = "README.md"
 authors = [

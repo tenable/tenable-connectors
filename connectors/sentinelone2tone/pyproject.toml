@@ -10,7 +10,7 @@ dependencies = [
     "rich>=13.9.3",
     "tomlkit>=0.13.2",
     "typer>=0.12.5",
-    "pytenable>=1.5.0",
+    "pytenable>=1.7.1",
     "pydantic-extra-types>=2.9.0",
     "sqlalchemy>=2.0.36",
     "tenint>=0.1.3",
@@ -25,6 +25,7 @@ email = "ecosystem-support@tenable.com"
 
 [project.optional-dependencies]
 testing = [
+    "pytest>=8.3.3",
     "pytest-cov>=6.0.0",
     "responses>=0.25.3",
 ]
@@ -33,17 +34,9 @@ testing = [
 [tool.tenint.connector]
 title = "SentinelOne to Tenable One"
 tags = ["sentinelone", "tvm"]
-timeout = 86400
 
-[tool.uv]
-dev-dependencies = [
-    "ptpython>=3.0.29",
-    "pyright>=1.1.386",
-    "ruff>=0.7.1",
-]
-
-[tool.uv.sources]
-pytenable = {url = "https://github.com/tenable/pyTenable/archive/refs/heads/feature/sync.zip"}
+[tool.tenint.connector.timeout]
+default = 14400
 
 [tool.ruff]
 line-length = 88

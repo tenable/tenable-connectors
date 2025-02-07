@@ -16,9 +16,13 @@ class MSDefenderCredential(Credential):
     name: str = 'MS Defender'
     slug: str = 'ms_defender'
     description: str = 'Microsoft Defender Credential'
-    tenant_id: str
-    app_id: str
-    app_secret: SecretStr
+    tenant_id: Annotated[
+        str, Field(title='Tenant Id', description='MS Defender Tenant Id')
+    ]
+    app_id: Annotated[str, Field(title='App Id', description='MS Defender App Id')]
+    app_secret: Annotated[
+        SecretStr, Field(title='App Secret', description='MS Defender App Secret')
+    ]
 
 
 class AppSettings(Settings):
@@ -26,7 +30,16 @@ class AppSettings(Settings):
     Microsoft Defender Connector Settings
     """
 
-    import_findings: Annotated[bool, Field(title='Import Findings')] = True
+    import_findings: Annotated[
+        bool,
+        Field(
+            title='Import Findings',
+            description=(
+                'Check Whether or Not To Import the Microsoft Defender '
+                'Vulnerability Findings',
+            ),
+        ),
+    ] = True
 
 
 connector = Connector(

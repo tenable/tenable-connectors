@@ -1,7 +1,7 @@
-
 import arrow
 import responses
 from responses.matchers import query_param_matcher
+
 
 @responses.activate
 def test_assets_list(msdapi, asset_page):
@@ -10,12 +10,7 @@ def test_assets_list(msdapi, asset_page):
         url='https://nourl.msdefender/api/v1.0/machines',
         match=[
             query_param_matcher(
-                {
-                    
-                    '$skip': 0,
-                    '$top': 10000,
-                    '$filter': f'lastSeen ge {ts}'
-                },
+                {'$skip': 0, '$top': 10000, '$filter': f'lastSeen ge {ts}'},
                 strict_match=False,
             )
         ],

@@ -1,7 +1,7 @@
 import logging
+from hashlib import sha256
 from ipaddress import IPv4Address, ip_address
 from typing import Any
-from uuid import UUID, uuid3
 
 import arrow
 from restfly.utils import trunc
@@ -11,8 +11,8 @@ from msdefender import MSDefenderAPI
 
 
 class Transformer:
-    NAMESPACE = UUID('25ba1ea7-4bca-413c-9629-f16c54bd0f12')
     counts: dict[str, dict[str, int]]
+    get_findings: bool = True
 
     def __init__(
         self,
@@ -26,9 +26,8 @@ class Transformer:
         self.counts = {}
 
     def run(self, get_findings: bool = True) -> None:
-        job = self.tvm.sync.create(
-            sync_id='tenable_microsoft_defender', vendor='microsoft', sensor='defender'
-        )
+        self.get_findings = get_findings
+        job = self.tvm.sync.create(sync_id='tenable_microsoft_defender')
 
         with job:
             for asset in self.defender.assets.list():
@@ -152,8 +151,11 @@ class Transformer:
                 },
             },
             'discovery': {
-                'first_observed_at': arrow.get(asset['firstSeen']).datetime,
+                'first_observed_on': arrow.get(asset['firstSeen']).datetime,
                 'last_observed_on': arrow.get(asset['lastSeen']).datetime,
+                'assessment_status': 'ATTEMPTED_FINDINGS'
+                if self.get_findings
+                else 'SKIPPED_FINDINGS',
             },
             'exposure': {'criticality': {'level': str(asset['exposureLevel']).upper()}},
         }
@@ -172,7 +174,7 @@ class Transformer:
         return {
             'object_type': 'cve-finding',
             'asset_id': finding['machineId'],
-            'id': str(uuid3(self.NAMESPACE, finding['id'])),
+            'id': str(sha256(finding['id'].encode('utf-8')).hexdigest()),
             'cve': {'cves': [finding['cveId']]},
             'exposure': {'severity': {'level': str(finding['severity'].upper())}},
             'observations': {

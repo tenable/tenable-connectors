@@ -3,9 +3,12 @@
 # This stage installs the base minimum that is common for every connector.
 FROM python:3.12-alpine AS connector-base
 
-ARG UV_SYSTEM_PYTHON=true
-RUN pip install uv && uv pip install "tenint==1.0.1"
+COPY --from=ghcr.io/astral-sh/uv:0.5 /uv /uvx /bin/
 
+ENV UV_SYSTEM_PYTHON=true \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_PREFERENCE=system \
+    UV_PROJECT_ENVIRONMENT=/usr/local/
 
 # Connector Build Stage
 # ---------------------
@@ -13,7 +16,8 @@ RUN pip install uv && uv pip install "tenint==1.0.1"
 # to ensure that the connector will run.
 FROM connector-base AS build
 ADD ./ /connector/
-RUN uv pip install -r /connector/pyproject.toml
+WORKDIR /connector
+RUN uv sync && uv pip install "tenint==1.0.4"
 
 
 # Connector Test Stage
@@ -26,9 +30,10 @@ RUN uv pip install -r /connector/pyproject.toml
 # * pip-audit  :: Ensure none of the libraries installed have any security issues
 # * bandit     :: Check the code for any potential low-hanging security code issues
 FROM build AS test
+
 WORKDIR /connector/
-RUN uv pip install "tenint[testing]" \
- && uv pip install --extra testing -r /connector/pyproject.toml
+RUN uv sync --all-extras \
+ && uv pip install "tenint[testing]==1.0.4"
 RUN ruff check
 RUN python -m pytest --cov-fail-under=80
 RUN uv export --format requirements-txt | uv tool run pip-audit

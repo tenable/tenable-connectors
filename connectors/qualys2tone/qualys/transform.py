@@ -18,6 +18,7 @@ class Transformer:
 
     counts: dict[str, dict[str, int]]
     db: tuple
+    get_findings: bool = True
 
     def __init__(
         self,
@@ -50,11 +51,8 @@ class Transformer:
             get_findings:
                 Should we get findings as well as asset metadata?
         """
-        job = self.tvm.sync.create(
-            sync_id='tenable_qualys_vm',
-            vendor='qualys',
-            sensor='vm',
-        )
+        self.get_findings = get_findings
+        job = self.tvm.sync.create(sync_id='tenable_qualys_vm')
 
         with job:
             self.log.info('Processing Qualys assets')
@@ -183,12 +181,6 @@ class Transformer:
         """
         Converts the raw Qualys asset into a T1-compatable device-asset
         """
-        external_ids = []
-        for key in ('asset_id', 'qg_hostid'):
-            if data.get(key):
-                external_ids.append(
-                    {'qualifier': key.replace('_', '-'), 'value': str(data.get(key))}
-                )
         return {
             'object_type': 'device-asset',
             'asset_class': 'DEVICE',
@@ -211,15 +203,20 @@ class Transformer:
                 },
                 'operating_system': {'type': self.get_os_type(data.get('os'))},
             },
-            'external_ids': external_ids,
+            'external_ids': [
+                {'qualifier': 'qualys-agent-id', 'value': data.get('qg_hostid')}
+            ],
             'discovery': {
                 'authentication': {
                     'attempted': data.get('last_vm_auth_scanned_date') is not None,
                     'successful': data.get('last_vm_auth_scanned_date') is not None,
                     'type': 'AGENT' if data.get('agent_status') else None,
                 },
-                'first_observed_at': data.get('first_found_date'),
+                'first_observed_on': data.get('first_found_date'),
                 'last_observed_on': data.get('last_vm_scanned_date'),
+                'assessment_status': 'ATTEMPTED_FINDINGS'
+                if self.get_findings
+                else 'SKIPPED_FINDINGS',
             },
             'labels': [t['name'] for t in data.get('tags', [])],
             'exposure': {

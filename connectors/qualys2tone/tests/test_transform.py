@@ -78,8 +78,10 @@ def test_asset_transformer(transformer):
             'operating_system': {'type': 'WINDOWS'},
         },
         'external_ids': [
-            {'qualifier': 'asset-id', 'value': '12345'},
-            {'qualifier': 'qg-hostid', 'value': '3cde24a7-aabb-ccdd-eeff-001122334455'},
+            {
+                'qualifier': 'qualys-agent-id',
+                'value': '3cde24a7-aabb-ccdd-eeff-001122334455',
+            },
         ],
         'discovery': {
             'authentication': {
@@ -87,7 +89,8 @@ def test_asset_transformer(transformer):
                 'successful': False,
                 'type': 'AGENT',
             },
-            'first_observed_at': datetime(2023, 8, 3, 6, 9, 24, tzinfo=UTC),
+            'assessment_status': 'ATTEMPTED_FINDINGS',
+            'first_observed_on': datetime(2023, 8, 3, 6, 9, 24, tzinfo=UTC),
             'last_observed_on': None,
         },
         'labels': ['Cloud Agent'],

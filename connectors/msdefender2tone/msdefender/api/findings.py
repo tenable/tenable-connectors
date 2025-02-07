@@ -3,13 +3,15 @@ import arrow
 from restfly.endpoint import APIEndpoint
 from .iterator import MsDefenderIterator
 
+
 class FindingsAPI(APIEndpoint):
     _path = 'vulnerabilities'
 
-    def definitions(self,
-                    updated_on: Optional[int] = None,
-                    page_size: Optional[int] = 10000,
-                    ) -> MsDefenderIterator:
+    def definitions(
+        self,
+        updated_on: Optional[int] = None,
+        page_size: Optional[int] = 10000,
+    ) -> MsDefenderIterator:
         """
         Returns a list of vulnerability resource types.
 
@@ -33,16 +35,17 @@ class FindingsAPI(APIEndpoint):
             ts = arrow.get(updated_on).format('YYYY-MM-DDTHH:mm:ss[Z]')
             params['filter'] = f'updatedOn ge {ts}'
 
-        return MsDefenderIterator(self._api,
-                                  _method='GET',
-                                  _envelope='value',
-                                  _page_size = page_size,
-                                  _path = self._path,
-                                  _max_page_size=10000,
-                                  _params=params
-                                  )
+        return MsDefenderIterator(
+            self._api,
+            _method='GET',
+            _envelope='value',
+            _page_size=page_size,
+            _path=self._path,
+            _max_page_size=10000,
+            _params=params,
+        )
 
-    def vulns(self, page_size: int=10000) -> MsDefenderIterator:
+    def vulns(self, page_size: int = 10000) -> MsDefenderIterator:
         """
         Get all vulnerabilities by machine and software
 
@@ -58,11 +61,12 @@ class FindingsAPI(APIEndpoint):
 
         `API Docs <https://learn.microsoft.com/en-us/defender-endpoint/api/get-all-vulnerabilities-by-machines>`_
         """
-        return MsDefenderIterator(self._api,
-                                  _method='GET',
-                                  _envelope='value',
-                                  _page_size = page_size,
-                                  _path = f'{self._path}/machinesVulnerabilities',
-                                  _max_page_size=10000,
-                                  _params={}
-                                  )
+        return MsDefenderIterator(
+            self._api,
+            _method='GET',
+            _envelope='value',
+            _page_size=page_size,
+            _path=f'{self._path}/machinesVulnerabilities',
+            _max_page_size=10000,
+            _params={},
+        )

@@ -6,11 +6,8 @@ import responses
 
 @pytest.fixture
 def token_page():
-    return {
-        'access_token': 'test_token',
-        'expires_in': 1788,
-        'token_type': 'bearer'
-    }
+    return {'access_token': 'test_token', 'expires_in': 1788, 'token_type': 'bearer'}
+
 
 @pytest.fixture()
 def token_response(token_page):
@@ -19,18 +16,19 @@ def token_response(token_page):
         rsps.add(
             method=responses.POST,
             url='https://nourl.crowdstrike/oauth2/token',
-            #match=[
+            # match=[
             #    json_params_matcher({
             #        'resource': 'https://api.securitycenter.windows.com',
             #        'client_id': app_id,
             #        'client_secret': app_secret,
             #        'grant_type': 'client_credentials',
             #    })
-            #    
-            #],
+            #
+            # ],
             json=token_page,
         )
         yield rsps
+
 
 @pytest.fixture
 def csapi(token_response):
@@ -41,6 +39,7 @@ def csapi(token_response):
         member_cid='test_member_cid',
     )
 
+
 @pytest.fixture
 def tapi():
     return TenableIO(
@@ -49,43 +48,43 @@ def tapi():
         secret_key='something',
     )
 
+
 @pytest.fixture
 def asset_id():
     return '11111111111'
-        
+
 
 @pytest.fixture
 def asset_id_page(asset_id):
     return {
         'meta': {
-            'query_time': 0.139107412, 
-            'pagination': {
-                'total': 2, 
-                'expires_at': 1733701742592134923
-            }, 
-            'powered_by': 'device-api', 
-            'trace_id': 'example_trace_id'
-        }, 
+            'query_time': 0.139107412,
+            'pagination': {'total': 2, 'expires_at': 1733701742592134923},
+            'powered_by': 'device-api',
+            'trace_id': 'example_trace_id',
+        },
         'resources': [],
-        'errors': []
+        'errors': [],
     }
+
 
 @pytest.fixture
 def asset_id_page_one(asset_id):
     return {
         'meta': {
-            'query_time': 0.139107412, 
+            'query_time': 0.139107412,
             'pagination': {
-                'total': 2, 
-                'offset': 'example_offset', 
-                'expires_at': 1733701742592134923
-            }, 
-            'powered_by': 'device-api', 
-            'trace_id': 'example_trace_id'
-        }, 
+                'total': 2,
+                'offset': 'example_offset',
+                'expires_at': 1733701742592134923,
+            },
+            'powered_by': 'device-api',
+            'trace_id': 'example_trace_id',
+        },
         'resources': [asset_id],
-        'errors': []
+        'errors': [],
     }
+
 
 @pytest.fixture
 def asset_details():
@@ -116,7 +115,7 @@ def asset_details():
                 'assigned_date': '2024-12-08T00:06:08.839346335Z',
                 'policy_id': '354b88b144254c329dccda320fa39cc8',
                 'policy_type': 'content-update',
-                'settings_hash': '15149298583092720469'
+                'settings_hash': '15149298583092720469',
             },
             'global_config': {
                 'applied': False,
@@ -124,7 +123,7 @@ def asset_details():
                 'assigned_date': '2024-12-08T00:06:08.837964971Z',
                 'policy_id': '29e1efd45cab4fc28e11e74260e1cd3c',
                 'policy_type': 'globalconfig',
-                'settings_hash': '12ecd2db'
+                'settings_hash': '12ecd2db',
             },
             'host-retention': {
                 'applied': False,
@@ -132,7 +131,7 @@ def asset_details():
                 'assigned_date': '2024-12-08T00:06:08.857961164Z',
                 'policy_id': '0e31ef23c8d141c6b7950118aac92153',
                 'policy_type': 'host-retention',
-                'settings_hash': 'fce339fc6cbb4dae36929fe363a81368f4a7e3f2c3a3d62ff7e3ef202ee48df5'
+                'settings_hash': 'fce339fc6cbb4dae36929fe363a81368f4a7e3f2c3a3d62ff7e3ef202ee48df5',
             },
             'prevention': {
                 'applied': False,
@@ -141,7 +140,7 @@ def asset_details():
                 'policy_id': 'ae00fe9bd81c4507a1e6598bc20e83af',
                 'policy_type': 'prevention',
                 'rule_groups': [],
-                'settings_hash': 'b798de53'
+                'settings_hash': 'b798de53',
             },
             'remote_response': {
                 'applied': False,
@@ -149,7 +148,7 @@ def asset_details():
                 'assigned_date': '2024-12-08T00:06:08.852982767Z',
                 'policy_id': '54d313eb5d4a483a96ca3ae9baa28ee0',
                 'policy_type': 'remote-response',
-                'settings_hash': '188b205c'
+                'settings_hash': '188b205c',
             },
             'sensor_update': {
                 'applied': False,
@@ -158,8 +157,8 @@ def asset_details():
                 'policy_id': 'e865ead304354114b98d8eec6d764286',
                 'policy_type': 'sensor-update',
                 'settings_hash': 'tagged|12;0',
-                'uninstall_protection': 'UNKNOWN'
-            }
+                'uninstall_protection': 'UNKNOWN',
+            },
         },
         'external_ip': '8.8.8.8',
         'filesystem_containment_status': 'normal',
@@ -180,15 +179,17 @@ def asset_details():
         'os_version': 'Amazon Linux 2023',
         'platform_id': '3',
         'platform_name': 'Linux',
-        'policies': [{
-            'applied': False,
-            'applied_date': None,
-            'assigned_date': '2024-12-08T00:06:08.833811644Z',
-            'policy_id': 'ae00fe9bd81c4507a1e6598bc20e83af',
-            'policy_type': 'prevention',
-            'rule_groups': [],
-            'settings_hash': 'b798de53'
-        }],
+        'policies': [
+            {
+                'applied': False,
+                'applied_date': None,
+                'assigned_date': '2024-12-08T00:06:08.833811644Z',
+                'policy_id': 'ae00fe9bd81c4507a1e6598bc20e83af',
+                'policy_type': 'prevention',
+                'rule_groups': [],
+                'settings_hash': 'b798de53',
+            }
+        ],
         'product_type_desc': 'Server',
         'reduced_functionality_mode': 'no',
         'serial_number': 'ec2d9982-1ab8-cfb5-552b-34c568a57fc9',
@@ -199,39 +200,38 @@ def asset_details():
         'system_product_name': 'm8g.2xlarge',
         'tags': [
             'SensorGroupingTags/CloudSecurity',
-            'SensorGroupingTags/DevUse2Dep3Eks1Backend'
+            'SensorGroupingTags/DevUse2Dep3Eks1Backend',
         ],
-        'zone_group': 'us-east-2a'
+        'zone_group': 'us-east-2a',
     }
+
 
 @pytest.fixture
 def asset_details_page(asset_details):
     return {
         'meta': {
-            'query_time': 0.139107412, 
-            'pagination': {
-                'total': 2, 
-                'expires_at': 1733701742592134923
-            }, 
-            'powered_by': 'device-api', 
-            'trace_id': 'example_trace_id'
-        }, 
+            'query_time': 0.139107412,
+            'pagination': {'total': 2, 'expires_at': 1733701742592134923},
+            'powered_by': 'device-api',
+            'trace_id': 'example_trace_id',
+        },
         'resources': [asset_details],
-        'errors': []
+        'errors': [],
     }
+
+
 def asset_details_page_one(asset_details):
     return {
         'meta': {
-            'query_time': 0.139107412, 
+            'query_time': 0.139107412,
             'pagination': {
-                'total': 2, 
-                'offset': 'example_offset', 
-                'expires_at': 1733701742592134923
-            }, 
-            'powered_by': 'device-api', 
-            'trace_id': 'example_trace_id'
-        }, 
+                'total': 2,
+                'offset': 'example_offset',
+                'expires_at': 1733701742592134923,
+            },
+            'powered_by': 'device-api',
+            'trace_id': 'example_trace_id',
+        },
         'resources': [asset_details],
-        'errors': []
+        'errors': [],
     }
-    

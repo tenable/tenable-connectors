@@ -1,4 +1,3 @@
-
 import pytest
 from tenable.io import TenableIO
 
@@ -47,7 +46,7 @@ def agent():
                 'cloudLocation': 'us-west-2',
                 'cloudNetwork': 'vpc-01c8106aefd58d6ee',
                 'cloudTags': [
-                    'Endpoint does not have sufficient ' 'permissions to fetch tags'
+                    'Endpoint does not have sufficient permissions to fetch tags'
                 ],
             }
         },

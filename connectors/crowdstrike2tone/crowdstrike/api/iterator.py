@@ -2,6 +2,7 @@ from typing import Dict, Any
 from restfly.iterator import APIIterator
 from copy import copy
 
+
 class CrowdstrikeAssetIterator(APIIterator):
     _path: str
     _envelope: str
@@ -13,8 +14,8 @@ class CrowdstrikeAssetIterator(APIIterator):
         params = copy(self._params)
         if self._offset:
             params['offset'] = self._offset
-        #params['skip'] = self._page_size * self.num_pages
-        #params['top'] = self._page_size
+        # params['skip'] = self._page_size * self.num_pages
+        # params['top'] = self._page_size
         resp = self._api.get(self._path, params=params)
         pagination = resp.get('meta').get('pagination')
         self._offset = pagination.get('offset', None)

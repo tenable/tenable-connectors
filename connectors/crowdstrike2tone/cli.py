@@ -13,6 +13,7 @@ from typing_extensions import Annotated
 
 app = Typer()
 
+
 class LogLevels(str, Enum):
     debug = 'DEBUG'
     info = 'INFO'
@@ -36,7 +37,8 @@ def setup_logging(log_level: LogLevels) -> None:
         datefmt='[%X]',
         handlers=[RichHandler(rich_tracebacks=True), fileHandler],
     )
-    
+
+
 @app.command()
 def run(
     tio_access_key: Annotated[
@@ -49,38 +51,43 @@ def run(
         str, Option(envvar='CROWDSTRIKE_URL', prompt=True, help='Crowdstrike api url')
     ],
     crowdstrike_client_id: Annotated[
-        str, Option(envvar='CROWDSTRIKE_CLIENT_ID', 
+        str,
+        Option(
+            envvar='CROWDSTRIKE_CLIENT_ID',
             prompt=True,
-            help='The API client ID to authenticate your API requests.\n' 
-                'https://falcon.crowdstrike.com/support/documentation/1/crowdstrike-api-introduction-for-developers'
-        )
+            help='The API client ID to authenticate your API requests.\n'
+            'https://falcon.crowdstrike.com/support/documentation/1/crowdstrike-api-introduction-for-developers',
+        ),
     ],
     crowdstrike_client_secret: Annotated[
-        str, 
-        Option(envvar='CROWDSTRIKE_CLIENT_SECRET', 
-            prompt=True, 
+        str,
+        Option(
+            envvar='CROWDSTRIKE_CLIENT_SECRET',
+            prompt=True,
             help='The API client secret to authenticate your API requests.\n'
-                'https://falcon.crowdstrike.com/support/documentation/1/crowdstrike-api-introduction-for-developers'
-        )
+            'https://falcon.crowdstrike.com/support/documentation/1/crowdstrike-api-introduction-for-developers',
+        ),
     ],
     crowdstrike_member_cid: Annotated[
-        str, 
+        str,
         Option(
-            envvar='CROWDSTRIKE_MEMBER_CID', 
-            help='For MSSP Master CIDs, optionally lock the token to act on behalf of this member CID'
-    )] = None,
+            envvar='CROWDSTRIKE_MEMBER_CID',
+            help='For MSSP Master CIDs, optionally lock the token to act on behalf of this member CID',
+        ),
+    ] = None,
     tio_url: Annotated[
         str, Option(envvar='TIO_URL', help='TVM/TIO URL')
-    ] = 'https://cloud.tenable.com',    
+    ] = 'https://cloud.tenable.com',
     log_level: Annotated[
         LogLevels, Option(envvar='LOG_LEVEL', help='Output logging level')
     ] = 'INFO',
     last_seen_days: Annotated[
-        int, 
+        int,
         Option(
-            envvar='CROWDSTRIKE_LAST_SEEN_DAYS', 
-            help='How many days back from today should we pull crowdstrike data for? '
-    )] = 1,    
+            envvar='CROWDSTRIKE_LAST_SEEN_DAYS',
+            help='How many days back from today should we pull crowdstrike data for? ',
+        ),
+    ] = 1,
     download_vulns: Annotated[
         bool, Option(help='Import Falson Spotlight Vulndreability Findings?')
     ] = False,

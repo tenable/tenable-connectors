@@ -16,9 +16,18 @@ class QualysCredential(Credential):
     name: str = 'Qualys VM'
     slug: str = 'qualys'
     description: str = 'Qualys QVM Credential'
-    username: str
-    password: SecretStr
-    url: AnyHttpUrl
+    username: Annotated[
+        str,
+        Field(title='Account Username', description='Qualys API Account Username'),
+    ]
+    password: Annotated[
+        SecretStr,
+        Field(title='Account Password', description='Qualys API Account Password'),
+    ]
+    url: Annotated[
+        AnyHttpUrl,
+        Field(title='Account URL', description='Valid Qualys Site URL'),
+    ]
 
 
 class AppSettings(Settings):
@@ -26,11 +35,20 @@ class AppSettings(Settings):
     Qualys2TOne Connector Settings
     """
 
-    import_findings: Annotated[bool, Field(title='Import Findings')] = True
+    import_findings: Annotated[
+        bool,
+        Field(
+            title='Import Findings',
+            description=(
+                'Check Whether or Not To Import the Qualys Vulnerability Findings'
+            ),
+        ),
+    ] = True
 
 
 connector = Connector(
-    settings=AppSettings, credentials=[QualysCredential, TenableCloudCredential]
+    settings=AppSettings,
+    credentials=[QualysCredential, TenableCloudCredential],
 )
 
 

@@ -42,7 +42,8 @@ def test_asset_transformer(transformer, agent):
             'successful': True,
             'type': 'AGENT',
         },
-        'first_observed_at': '2024-08-07T17:57:08.475617Z',
+        'assessment_status': 'ATTEMPTED_FINDINGS',
+        'first_observed_on': '2024-08-07T17:57:08.475617Z',
         'last_observed_on': '2024-12-06T03:43:42.885065Z',
     }
     assert resp['tags'] == [{'name': 'test', 'value': 'value'}]
@@ -52,9 +53,7 @@ def test_asset_transformer(transformer, agent):
     assert {'address': '35.89.96.104'} in resp['device']['networking'][
         'ip_addresses_v4'
     ]
-    assert {'address': 'fe80::887:7aff:fe4f:b40b'} in resp['device']['networking'][
-        'ip_addresses_v6'
-    ]
+    assert 'ip_addresses_v6' not in resp['device']['networking'].keys()
     assert resp['device']['networking']['mac_addresses'] == ['0a:87:7a:4f:b4:0b']
     assert resp['id'] == '2011794797031672400'
     assert resp['name'] == 'ip-172-31-4-242'

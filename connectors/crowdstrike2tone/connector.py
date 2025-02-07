@@ -16,10 +16,34 @@ class CrowdstrikeCredential(Credential):
     name: str = 'Crowdstrike'
     slug: str = 'crowdstrike'
     description: str = 'Crowdstrike API Credential'
-    client_id: str
-    client_secret: SecretStr
-    member_cid: str | None = None
-    url: AnyHttpUrl
+    client_id: Annotated[
+        str,
+        Field(
+            title='Client Id',
+            description='The API client id to authenticate your API requests.',
+        ),
+    ]
+    client_secret: Annotated[
+        SecretStr,
+        Field(
+            title='CrowdStrike Client Secret',
+            description='The API client secret to authenticate your API requests.',
+        ),
+    ]
+    member_cid: Annotated[
+        str | None,
+        Field(
+            title='Member Customer ID',
+            description=(
+                'For MSSP Master CIDs, optionally lock the token to act on '
+                'behalf of this member CID.'
+            ),
+        ),
+    ] = None
+    url: Annotated[
+        AnyHttpUrl,
+        Field(title='CrowdStrike Site URL', description='A valid CrowdStrike site URL'),
+    ]
 
 
 class AppSettings(Settings):
@@ -28,9 +52,8 @@ class AppSettings(Settings):
     """
 
     last_seen_days: Annotated[
-        int, Field(title='How many days back to get assets/findings', ge=1, le=7)
+        int, Field(description='How many days back to get assets/findings', ge=1, le=7)
     ] = 1
-    # import_findings: Annotated[bool, Field(title='Import Findings')] = False
 
 
 connector = Connector(

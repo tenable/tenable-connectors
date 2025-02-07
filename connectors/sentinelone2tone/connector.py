@@ -15,8 +15,10 @@ class SentinelOneCredential(Credential):
     prefix: str = 's1'
     name: str = 'SentinelOne Singularity'
     slug: str = 's1'
-    api_token: SecretStr
-    url: AnyHttpUrl
+    api_token: Annotated[
+        SecretStr, Field(title='API Token', description='SentinelOne API Token')
+    ]
+    url: Annotated[AnyHttpUrl, Field(title='URL', description='SentinelOne Site URL')]
 
 
 class AppSettings(Settings):
@@ -24,7 +26,15 @@ class AppSettings(Settings):
     SentinelOne2TOne Connector Settings
     """
 
-    import_findings: Annotated[bool, Field(title='Import Findings')] = True
+    import_findings: Annotated[
+        bool,
+        Field(
+            title='Import Findings',
+            description=(
+                'Check Whether or Not To Import the SenitinelOne Vulnerability Findings'
+            ),
+        ),
+    ] = True
 
 
 connector = Connector(

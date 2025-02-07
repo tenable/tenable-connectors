@@ -11,6 +11,7 @@ from typing_extensions import Annotated
 
 app = Typer()
 
+
 class LogLevels(str, Enum):
     debug = 'DEBUG'
     info = 'INFO'
@@ -34,7 +35,8 @@ def setup_logging(log_level: LogLevels) -> None:
         datefmt='[%X]',
         handlers=[RichHandler(rich_tracebacks=True), fileHandler],
     )
-    
+
+
 @app.command()
 def run(
     tio_access_key: Annotated[
@@ -44,21 +46,26 @@ def run(
         str, Option(envvar='TIO_SECRET_KEY', prompt=True, help='TVM/TIO API Secret Key')
     ],
     defender_tenant_id: Annotated[
-        str, Option(envvar='MS_DEFENDER_TENANT_ID', prompt=True, help='MS Defender Tenant ID')
+        str,
+        Option(
+            envvar='MS_DEFENDER_TENANT_ID', prompt=True, help='MS Defender Tenant ID'
+        ),
     ],
-    defender_app_id: Annotated[ 
+    defender_app_id: Annotated[
         str, Option(envvar='MS_DEFENDER_APP_ID', prompt=True, help='MS Defender App ID')
     ],
     defender_app_secret: Annotated[
-        str, Option(
-            envvar='MS_DEFENDER_APP_SECRET', 
-            prompt=True, 
+        str,
+        Option(
+            envvar='MS_DEFENDER_APP_SECRET',
+            prompt=True,
             hide_input=True,
-            help='MS Defender App Secret Value')
+            help='MS Defender App Secret Value',
+        ),
     ],
     tio_url: Annotated[
         str, Option(envvar='TIO_URL', help='TVM/TIO URL')
-    ] = 'https://cloud.tenable.com',    
+    ] = 'https://cloud.tenable.com',
     log_level: Annotated[
         LogLevels, Option(envvar='LOG_LEVEL', help='Output logging level')
     ] = 'INFO',

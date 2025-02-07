@@ -3,19 +3,21 @@ from .assets import AssetsAPI
 from .findings import FindingsAPI
 import os
 
+
 class MSDefenderAPI(APISession):
     """
     Defender API package
     """
+
     _base_path = 'api/v1.0'
     _box = True
     _url = 'https://api.security.microsoft.com'
     _base_token_url = 'https://login.windows.net'
-    
+
     def __init__(self, **kwargs):
         """
         Initialize the MSDefenderAPI API Session.
-        
+
         Args:
             tenant_id: The customer Tenant ID
             api_token: The Customer instance URL
@@ -34,12 +36,11 @@ class MSDefenderAPI(APISession):
             raise ConnectionError('No valid app_id provided.')
         if not kwargs.get('app_secret'):
             raise ConnectionError('No valid app_secret provided.')
-            
+
         self._base_token_url = kwargs.pop('_base_token_url', self._base_token_url)
-        
+
         super().__init__(**kwargs)
-    
-    
+
     def _get_auth_token(
         self,
         tenant_id: str,
@@ -47,19 +48,16 @@ class MSDefenderAPI(APISession):
         app_secret: str,
         **kwargs,
     ) -> str:
-        """
-        
-        """
+        """ """
         url = f'{self._base_token_url}/{tenant_id}/oauth2/token'
         body = {
-            'resource' : 'https://api.securitycenter.windows.com',
-            'client_id' : app_id,
-            'client_secret' : app_secret,
-            'grant_type' : 'client_credentials'
+            'resource': 'https://api.securitycenter.windows.com',
+            'client_id': app_id,
+            'client_secret': app_secret,
+            'grant_type': 'client_credentials',
         }
         return self.post(url, data=body).access_token
-      
-          
+
     def _authenticate(
         self,
         tenant_id: str,
@@ -73,8 +71,8 @@ class MSDefenderAPI(APISession):
 
         token = self._get_auth_token(tenant_id, app_id, app_secret)
         self._session.headers = {
-            'Content-Type' : 'application/json',
-            'Authorization' : f'Bearer {token}'
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {token}',
         }
 
     def _req(self, method: str, path: str, **kwargs):

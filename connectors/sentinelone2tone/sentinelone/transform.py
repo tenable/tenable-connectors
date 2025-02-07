@@ -13,6 +13,7 @@ from sentinelone import SentinelOneAPI
 class Transformer:
     counts: dict[str, dict[str, int]]
     app_ids: list[int] = []
+    get_findings: bool = True
 
     def __init__(
         self,
@@ -38,17 +39,13 @@ class Transformer:
         Args:
             get_findings (optional): Should we import findings into T1 as well?
         """
-
+        self.get_findings = get_findings
         # NOTE: This whole function should likely be broken down further as there is
         #       a lot of looping logic in here that can't easily be tested.  This can
         #       all be adjusted at a later date when SentinelOne comes back to us with
         #       an improved export API that doesn't require the call volume that is
         #       currently necessary.
-        job = self.tvm.sync.create(
-            sync_id='tenable_sentinel_one_singularity',
-            vendor='sentinel-one',
-            sensor='singularity',
-        )
+        job = self.tvm.sync.create(sync_id='tenable_sentinel_one_singularity')
 
         with job:
             self.log.info('Collecting assets')
@@ -139,15 +136,17 @@ class Transformer:
                 if endpoint.get('osSTartTime')
                 else None,
             },
-            'external_ids': [{'qualifier': 'endpoint-uuid', 'value': endpoint['uuid']}],
             'discovery': {
                 'authentication': {
                     'attempted': endpoint.get('scanStartedAt') is not None,
                     'successful': endpoint.get('scanAbortedAt') is None,
                     'type': 'AGENT',
                 },
-                'first_observed_at': arrow.get(endpoint['createdAt']).datetime,
+                'first_observed_on': arrow.get(endpoint['createdAt']).datetime,
                 'last_observed_on': arrow.get(endpoint['updatedAt']).datetime,
+                'assessment_status': 'ATTEMPTED_FINDINGS'
+                if self.get_findings
+                else 'SKIPPED_FINDINGS',
             },
             'tags': [
                 {'name': t['key'], 'value': t['value']}

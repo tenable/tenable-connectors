@@ -1,10 +1,8 @@
-
-
-
 base = 'application-management/risks'
 
 import responses
 from responses.matchers import query_param_matcher
+
 
 @responses.activate
 def test_findings_apps_with_risk(s1api, app_page):
@@ -24,6 +22,7 @@ def test_findings_apps_with_risk(s1api, app_page):
     for item in resp:
         assert isinstance(item, dict)
 
+
 @responses.activate
 def test_findings_cves_on_app(s1api, cve_page, app_id):
     responses.get(
@@ -42,6 +41,7 @@ def test_findings_cves_on_app(s1api, cve_page, app_id):
     resp = s1api.findings.cves_on_app([app_id])
     for item in resp:
         assert isinstance(item, dict)
+
 
 @responses.activate
 def test_findings_endpoints_w_apps(s1api, endpoint_page, app_id):

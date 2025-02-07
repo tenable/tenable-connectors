@@ -33,7 +33,8 @@ def test_transform_asset(transformer, asset):
             },
         },
         'discovery': {
-            'first_observed_at': '2024-07-25T12:59:25.383557Z',
+            'assessment_status': 'ATTEMPTED_FINDINGS',
+            'first_observed_on': '2024-07-25T12:59:25.383557Z',
             'last_observed_on': '2024-12-07T23:33:15.872995Z',
         },
         'exposure': {
@@ -65,7 +66,7 @@ def test_transform_finding(transformer, vuln):
                 }
             ],
         },
-        'id': '57b71605-b27e-3401-a3fc-b000e869051c',
+        'id': '773050a2a735ff47636152042462f7563862a02ea4beb61a83412c9edfffd78d',
         'object_type': 'cve-finding',
     }
 

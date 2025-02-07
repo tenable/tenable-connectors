@@ -1,15 +1,17 @@
 from restfly.endpoint import APIEndpoint
 from sentinelone.api.iterator import SentinelOneIterator
 
+
 class Assets(APIEndpoint):
     _path = 'agents'
 
-    def list(self, 
+    def list(
+        self,
         limit: int = 1000,
-        **kwargs,   
-    )-> SentinelOneIterator:
+        **kwargs,
+    ) -> SentinelOneIterator:
         """
-        
+
         Required Permissions:
             Endpoints.view
 
@@ -17,12 +19,11 @@ class Assets(APIEndpoint):
         params = {
             'limit': limit,
         }
-        
+
         return SentinelOneIterator(
             self._api,
             _envelope='data',
             _path=self._path,
             _params=params,
-            _api_name="assets:list",
+            _api_name='assets:list',
         )
-        

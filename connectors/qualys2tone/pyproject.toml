@@ -1,6 +1,6 @@
 [project]
 name = "qualys2tone"
-version = "0.9.7"
+version = "1.0.0"
 description = "Qualys VM to Tenable One"
 readme = "README.md"
 authors = [
@@ -16,7 +16,7 @@ dependencies = [
     "rich>=13.9.2",
     "sqlalchemy>=2.0.36",
     "typer>=0.12.5",
-    "pytenable>=1.5.0",
+    "pytenable>=1.7.1",
     "pydantic-extra-types>=2.10.0",
     "tenint>=0.1.0",
     "defusedxml>=0.7.1",
@@ -24,6 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 testing = [
+    "pytest>=8.3.3",
     "pytest-cov>=6.0.0",
     "responses>=0.25.3",
 ]
@@ -35,21 +36,7 @@ support = "https://community.tenable.com"
 [tool.tenint.connector]
 title = "Qualys to Tenable One"
 tags= ["qualys", "tvm"]
-timeout = 3600
 
-[tool.uv.sources]
-pytenable = {url = "https://github.com/tenable/pyTenable/archive/refs/heads/feature/sync.zip"}
-
-[tool.uv]
-dev-dependencies = [
-    "ptpython>=3.0.29",
-    "pyright>=1.1.385",
-    "pytest-cov>=5.0.0",
-    "pytest>=8.3.3",
-    "responses>=0.25.3",
-    "ruff>=0.7.0",
-    "isort>=5.13.2",
-]
 
 [tool.ruff]
 line-length = 88

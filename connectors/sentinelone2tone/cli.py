@@ -7,6 +7,7 @@ from tenable.io import TenableIO
 from typer import Option, Typer
 from typing_extensions import Annotated
 
+from sentinelone import __version__ as version
 from sentinelone.api.session import SentinelOneAPI
 from sentinelone.transform import Transformer
 
@@ -67,7 +68,14 @@ def run(
     """
     setup_logging(log_level)
 
-    tvm = TenableIO(access_key=tio_access_key, secret_key=tio_secret_key, url=tio_url)
+    tvm = TenableIO(
+        access_key=tio_access_key,
+        secret_key=tio_secret_key,
+        url=tio_url,
+        vendor='Tenable',
+        product='SentinelOne2ToneSyncConnector',
+        build=version,
+    )
     s1 = SentinelOneAPI(api_token=s1_api_token, url=s1_url)
     d2t1 = Transformer(tvm=tvm, s1=s1)
     d2t1.run(get_findings=download_vulns)

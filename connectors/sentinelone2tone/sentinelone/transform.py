@@ -7,7 +7,9 @@ from typing import Any
 import arrow
 from tenable.io import TenableIO
 
-from sentinelone import SentinelOneAPI
+from sentinelone.api.session import SentinelOneAPI
+
+from . import __version__ as version
 
 
 class Transformer:
@@ -27,7 +29,15 @@ class Transformer:
             tvm (optional): TVM Session to use
             qvm (optional): SentinelOne session to use
         """
-        self.tvm = tvm if tvm else TenableIO()
+        self.tvm = (
+            tvm
+            if tvm
+            else TenableIO(
+                vendor='Tenable',
+                product='SentinelOne2ToneSyncConnector',
+                build=version,
+            )
+        )
         self.s1 = s1 if s1 else SentinelOneAPI()
         self.log = logging.getLogger('Transformer')
         self.counts = {}

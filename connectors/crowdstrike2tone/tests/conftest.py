@@ -1,7 +1,8 @@
 import pytest
-from tenable.io import TenableIO
-from crowdstrike import CrowdStrikeAPI
 import responses
+from tenable.io import TenableIO
+
+from crowdstrike.api.session import CrowdStrikeAPI
 
 
 @pytest.fixture

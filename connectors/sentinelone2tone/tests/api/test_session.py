@@ -1,6 +1,6 @@
 import pytest
 
-from sentinelone import SentinelOneAPI
+from sentinelone.api.session import SentinelOneAPI
 
 
 def test_api_session_init_test_connection():

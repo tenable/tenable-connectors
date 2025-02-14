@@ -7,7 +7,8 @@ import arrow
 from restfly.utils import trunc
 from tenable.io import TenableIO
 
-from msdefender import MSDefenderAPI
+from . import __version__ as version
+from .api.session import MSDefenderAPI
 
 
 class Transformer:
@@ -21,7 +22,15 @@ class Transformer:
     ) -> None:
         """ """
         self.tvm = tvm if tvm else TenableIO()
-        self.defender = defender if defender else MSDefenderAPI()
+        self.defender = (
+            defender
+            if defender
+            else MSDefenderAPI(
+                vendor='Tenable',
+                product='MSDefender2ToneSyncConnector',
+                build=version,
+            )
+        )
         self.log = logging.getLogger('Transformer')
         self.counts = {}
 

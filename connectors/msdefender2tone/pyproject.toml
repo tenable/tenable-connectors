@@ -1,6 +1,6 @@
 [project]
 name = "msdefender2tone"
-version = "1.0.0"
+version = "1.0.1"
 description = "MS Defender to Tenable One"
 authors = [
     {name = "Tenable, Inc", email = "ecosystem-support@tenable.com"},

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-from crowdstrike import CrowdStrikeAPI
-from crowdstrike.transform import Transformer
-
 import logging
 from enum import Enum
 
@@ -10,6 +7,10 @@ from rich.logging import RichHandler
 from tenable.io import TenableIO
 from typer import Option, Typer
 from typing_extensions import Annotated
+
+from crowdstrike import __version__ as version
+from crowdstrike.api.session import CrowdStrikeAPI
+from crowdstrike.transform import Transformer
 
 app = Typer()
 
@@ -97,7 +98,14 @@ def run(
     """
     setup_logging(log_level)
 
-    tvm = TenableIO(access_key=tio_access_key, secret_key=tio_secret_key, url=tio_url)
+    tvm = TenableIO(
+        access_key=tio_access_key,
+        secret_key=tio_secret_key,
+        url=tio_url,
+        vendor='Tenable',
+        product='CrowdStrike2ToneSyncConnector',
+        build=version,
+    )
     crwd = CrowdStrikeAPI(
         url=crowdstrike_url,
         client_id=crowdstrike_client_id,

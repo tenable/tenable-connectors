@@ -1,6 +1,6 @@
 import pytest
 
-from crowdstrike import CrowdStrikeAPI
+from crowdstrike.api.session import CrowdStrikeAPI
 
 
 def test_api_session_init_test_connection():

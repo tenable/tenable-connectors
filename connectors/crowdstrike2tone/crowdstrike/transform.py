@@ -6,7 +6,8 @@ import arrow
 from restfly.utils import trunc
 from tenable.io import TenableIO
 
-from crowdstrike import CrowdStrikeAPI
+from . import __version__ as version
+from .api.session import CrowdStrikeAPI
 
 
 class Transformer:
@@ -19,7 +20,15 @@ class Transformer:
         crwd: CrowdStrikeAPI | None = None,
     ) -> None:
         """ """
-        self.tvm = tvm if tvm else TenableIO()
+        self.tvm = (
+            tvm
+            if tvm
+            else TenableIO(
+                vendor='Tenable',
+                product='CrowdStrike2ToneSyncConnector',
+                build=version,
+            )
+        )
         self.crwd = crwd if crwd else CrowdStrikeAPI()
         self.log = logging.getLogger('Transformer')
         self.counts = {}

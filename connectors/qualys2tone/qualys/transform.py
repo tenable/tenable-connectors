@@ -7,6 +7,7 @@ from typing import Any
 
 from tenable.io import TenableIO
 
+from . import __version__ as version
 from .api import QualysAPI
 from .database import Knowledgebase, init_db
 
@@ -35,7 +36,15 @@ class Transformer:
             qualys: Optional QualysVM session to use
         """
         self.db = init_db(db_uri)
-        self.tvm = tvm if tvm else TenableIO()
+        self.tvm = (
+            tvm
+            if tvm
+            else TenableIO(
+                vendor='Tenable',
+                product='QualysVM2ToneSyncConnector',
+                build=version,
+            )
+        )
         self.qualys = qualys if qualys else QualysAPI()
         self.log = logging.getLogger('Transformer')
         self.counts = {}
@@ -205,7 +214,9 @@ class Transformer:
             },
             'external_ids': [
                 {'qualifier': 'qualys-agent-id', 'value': data.get('qg_hostid')}
-            ],
+            ]
+            if data.get('qg_hostid')
+            else None,
             'discovery': {
                 'authentication': {
                     'attempted': data.get('last_vm_auth_scanned_date') is not None,

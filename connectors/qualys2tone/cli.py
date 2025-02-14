@@ -8,6 +8,7 @@ from tenable.io import TenableIO
 from typer import Option, Typer
 from typing_extensions import Annotated
 
+from qualys import __version__ as version
 from qualys.api import QualysAPI
 from qualys.transform import Transformer
 
@@ -84,7 +85,13 @@ def run(
             logging.info('Removing old cache file.')
             cache_file.unlink()
 
-    tvm = TenableIO(access_key=tio_access_key, secret_key=tio_secret_key)
+    tvm = TenableIO(
+        access_key=tio_access_key,
+        secret_key=tio_secret_key,
+        vendor='Tenable',
+        product='QualysVM2ToneSyncConnector',
+        build=version,
+    )
     qualys = QualysAPI(
         url=qualys_url, username=qualys_username, password=qualys_password
     )

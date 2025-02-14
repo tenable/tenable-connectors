@@ -1,7 +1,7 @@
 import pytest
 from tenable.io import TenableIO
 
-from sentinelone import SentinelOneAPI
+from sentinelone.api.session import SentinelOneAPI
 
 
 @pytest.fixture

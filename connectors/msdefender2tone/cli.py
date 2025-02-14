@@ -2,12 +2,14 @@
 import logging
 from enum import Enum
 
-from msdefender.api.session import MSDefenderAPI
-from msdefender.transform import Transformer
 from rich.logging import RichHandler
 from tenable.io import TenableIO
 from typer import Option, Typer
 from typing_extensions import Annotated
+
+from msdefender import __version__ as version
+from msdefender.api.session import MSDefenderAPI
+from msdefender.transform import Transformer
 
 app = Typer()
 
@@ -78,7 +80,14 @@ def run(
     """
     setup_logging(log_level)
 
-    tvm = TenableIO(access_key=tio_access_key, secret_key=tio_secret_key, url=tio_url)
+    tvm = TenableIO(
+        access_key=tio_access_key,
+        secret_key=tio_secret_key,
+        url=tio_url,
+        vendor='Tenable',
+        product='MSDefender2ToneSyncConnector',
+        build=version,
+    )
     defender = MSDefenderAPI(
         tenant_id=defender_tenant_id,
         app_id=defender_app_id,

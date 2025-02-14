@@ -2,7 +2,7 @@ import pytest
 import responses
 from tenable.io import TenableIO
 
-from msdefender import MSDefenderAPI
+from msdefender.api.session import MSDefenderAPI
 
 
 @pytest.fixture

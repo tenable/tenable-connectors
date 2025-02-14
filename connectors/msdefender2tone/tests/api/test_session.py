@@ -1,5 +1,6 @@
 import pytest
-from msdefender import MSDefenderAPI
+
+from msdefender.api.session import MSDefenderAPI
 
 
 def test_api_session_init_test_connection():

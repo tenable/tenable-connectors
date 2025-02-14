@@ -1,8 +1,10 @@
 .git
 .venv
+*.pyc
 *.db
 .ruff_cache
 .pytest_cache
 .coverage
 APP_ID
 logo.*
+__pycache__

@@ -22,6 +22,7 @@ def test_transform_asset(transformer, asset_details):
             'networking': {
                 'ip_addresses_v4': [{'address': '8.8.8.8'}, {'address': '172.1.1.2'}],
                 'mac_addresses': ['6e:61:0e:cb:da:68'],
+                'network_group_id': '3d855da0-4efa-463b-9095-08317dc46035',
             },
             'operating_system': {
                 'type': 'LINUX',

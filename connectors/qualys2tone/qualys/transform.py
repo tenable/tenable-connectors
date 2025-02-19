@@ -209,6 +209,7 @@ class Transformer:
                     'ip_addresses_v6': [{'address': data['ipv6']}]
                     if data.get('ipv6')
                     else None,
+                    'network_group_id': 'c0b418b7-e64c-4751-b287-b6e0d9a24010',
                 },
                 'operating_system': {'type': self.get_os_type(data.get('os'))},
             },

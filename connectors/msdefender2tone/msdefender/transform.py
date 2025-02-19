@@ -149,6 +149,7 @@ class Transformer:
                         {'address': i} for i in network_info['ipv6'] if i
                     ],
                     'mac_addresses': network_info.get('macs', []),
+                    'network_group_id': '7b6a4409-03fd-47c4-b021-7d28f3da59ee',
                 },
                 'operating_system': {
                     'build': asset['osBuild'],

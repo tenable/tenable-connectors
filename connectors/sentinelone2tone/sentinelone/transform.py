@@ -193,6 +193,7 @@ class Transformer:
             'mac_addresses': [
                 intf['physical'] for intf in data.get('networkInterfaces', [])
             ],
+            'network_group_id': '664ee720-9759-41d4-9a44-ed7474a4c789',
         }
 
     def finding_endpoint_transformer(

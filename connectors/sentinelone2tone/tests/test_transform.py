@@ -57,6 +57,10 @@ def test_asset_transformer(transformer, agent):
     assert resp['device']['networking']['mac_addresses'] == ['0a:87:7a:4f:b4:0b']
     assert resp['id'] == '2011794797031672400'
     assert resp['name'] == 'ip-172-31-4-242'
+    assert (
+        resp['device']['networking']['network_group_id']
+        == '664ee720-9759-41d4-9a44-ed7474a4c789'
+    )
 
 
 def test_finding_transformer(transformer, app):

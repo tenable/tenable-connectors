@@ -22,6 +22,7 @@ def test_transform_asset(transformer, asset):
                 'mac_addresses': [
                     '00:50:56:ab:d6:4c',
                 ],
+                'network_group_id': '7b6a4409-03fd-47c4-b021-7d28f3da59ee',
             },
             'operating_system': {
                 'build': 'None',

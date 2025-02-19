@@ -88,6 +88,7 @@ class Transformer:
                     else None,
                     'ip_addresses_v4': [],
                     'ip_addresses_v6': [],
+                    'network_group_id': '3d855da0-4efa-463b-9095-08317dc46035',
                 },
                 'hardware': {
                     'serial_number': asset.get('serial_number'),

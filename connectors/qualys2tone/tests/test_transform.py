@@ -74,6 +74,7 @@ def test_asset_transformer(transformer):
                 'fqdns': [{'value': 'remote'}],
                 'ip_addresses_v4': [{'address': '1.2.3.4'}],
                 'ip_addresses_v6': None,
+                'network_group_id': 'c0b418b7-e64c-4751-b287-b6e0d9a24010',
             },
             'operating_system': {'type': 'WINDOWS'},
         },

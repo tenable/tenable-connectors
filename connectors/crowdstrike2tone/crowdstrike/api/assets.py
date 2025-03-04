@@ -1,10 +1,12 @@
-from typing import Optional, List, Dict, Union
-from requests import Response
-from box import Box, BoxList
+from typing import Dict, List, Optional, Union
+
 import arrow
-from crowdstrike.api.iterator import CrowdstrikeAssetIterator
-from restfly.errors import BadRequestError
+from box import Box, BoxList
+from requests import Response
 from restfly.endpoint import APIEndpoint
+from restfly.errors import BadRequestError
+
+from crowdstrike.api.iterator import CrowdstrikeAssetIterator
 
 
 class AssetsAPI(APIEndpoint):
@@ -20,11 +22,12 @@ class AssetsAPI(APIEndpoint):
         Get all hosts
 
         Args:
-            limit (int): the number of items to return. This should never be more than 5000
-            as the following api call to get details only accepts max 5000
+            limit (int): the number of items to return. This should never be more than
+            5000 as the following api call to get details only accepts max 5000
             sort (str, optional): the FQL sort parameter
-            last_seen_days (int, optional): the number of days back to search back if filter isnt provided.
-            filter (str, optional): The filter string in FQL format to filter CS assets with
+            last_seen_days (int, optional): the number of days back to search back
+            if filter isn't provided.
+            filter (str, optional): The filter string in FQL format to filter CS assets
         Returns:
             CrowdstrikeAssetIterator
 

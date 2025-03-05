@@ -88,16 +88,6 @@ class Transformer:
             self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
 
             if get_findings and len(vuln_asset_ids) > 0:
-                # for asset_id in vuln_asset_ids:
-                #     for vuln in self.rapid7.findings.list_asset_findings(asset_id):
-                #         if vuln.get('status') == 'vulnerable':
-                #             self.cache_knowledgebase_impacted_only(vuln)
-                #             finding = self.transform_finding(vuln, asset_id)
-                #             self.log.info(
-                #                 f'Adding finding id={finding["id"]} to '
-                #                 + f'asset id={asset_id}'
-                #             )
-                #             job.add(finding, object_type='cve-finding')
                 self.cache_knowledgebase()
                 for asset_id in vuln_asset_ids:
                     for vuln in self.rapid7.findings.list_asset_findings(asset_id):

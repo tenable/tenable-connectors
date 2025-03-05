@@ -206,5 +206,5 @@ class Transformer:
             'id': finding['id'],
             'cve': {'cves': [CVE_ID]} if CVE_ID else None,
             'observations': observations if observations else None,
-            'exposure': {'severity': {'level': SEVERITY}},
+            'exposure': {'severity': {'level': SEVERITY} if SEVERITY else None},
         }

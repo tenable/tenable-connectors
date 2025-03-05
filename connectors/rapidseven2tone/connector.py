@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from typing import Annotated
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import AnyHttpUrl, Field, SecretStr
 from tenint import Connector, Credential, Settings, TenableCloudCredential
 
 from rapidseven.transform import Transformer
@@ -12,10 +12,19 @@ class RapidSevenCredential(Credential):
     RapidSeven Credentials
     """
 
-    url: AnyHttpUrl
-    username: str
-    password: str
-    description: str = 'RapidSeven API Credential'
+    url: Annotated[
+        AnyHttpUrl,
+        Field(title='RapidSeven Site URL', description='A valid RapidSeven site URL'),
+    ]
+    username: Annotated[
+        str,
+        Field(title='Account Username', description='Rapid Seven Account Username'),
+    ]
+    password: Annotated[
+        SecretStr,
+        Field(title='Account Password', description='Rapid Seven Account Password'),
+    ]
+    description: str = 'RapidSeven Credentials'
 
 
 class AppSettings(Settings):

@@ -1,0 +1,68 @@
+[project]
+name = "rapidseven2tone"
+version = "1.0.0"
+description = "RapidSeven -> Tenable One"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Tenable, Inc.", email = "ecosystem-support@tenable.com" },
+]
+dependencies = [
+    "restfly>=1.5.0",
+    "pytenable>=1.7.1",
+    "tenint>=1.0.0",
+    "sqlalchemy>=2.0.36",
+]
+
+[project.optional-dependencies]
+testing = [
+    "pytest-cov>=6.0.0",
+    "responses>=0.25.3",
+]
+
+[project.urls]
+repository = "https://github.com/tenable/tenable-connectors"
+logo = "https://raw.githubusercontent.com/tenable/tenable-connectors/refs/heads/main/connectors/rapidseven2tone/logo.svg"
+support = "https://community.tenable.com"
+
+[tool.tenint.connector]
+title = "RapidSeven to Tenable One"
+tags = ["rapidseven", "tvm"]
+
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+exclude = [
+  ".nova",
+  ".github",
+  ".git",
+  ".pytest_cache",
+  "__pycache__",
+  ".venv",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B"]
+fixable = [ "ALL" ]
+unfixable = [ "B" ]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402", "F401"]
+"**/{tests,docs,tools}/*" = ["E402"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "--cov=rapidseven --cov-report=term-missing"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]

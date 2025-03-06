@@ -48,9 +48,10 @@ class Transformer:
         Main entry point for the transformer.
 
         Args:
-            get_findings (bool): Should we import findings into T1 as well?
-            last_seen_days (int): The number of days to go back when collecting
-            assets and findings.
+            get_findings (bool):
+                Should we import findings into T1 as well?
+            last_seen_days (int):
+                The number of days to go back when collecting assets and findings.
 
         Returns:
             dict: The counts of assets and findings imported.
@@ -173,23 +174,17 @@ class Transformer:
                     {
                         'product': {
                             # Normalize the product name and vendor to 32 characters
-                            'product_name': trunc(
-                                str(app.get('vendor_normalized', '')), 32
-                            ),
-                            'vendor_name': trunc(
-                                str(app.get('product_name_version', '')), 32
-                            ),
-                            'version': trunc(
-                                str(app.get('product_name_normalized', '')), 32
-                            ),
+                            'product_name': app.get('vendor_normalized'),
+                            'vendor_name': app.get('product_name_version'),
+                            'version': app.get('product_name_normalized'),
                         }
                     }
                 )
-        CVE_ID = finding.get('cve', {}).get('id')
-        SEVERITY = finding.get('cve', {}).get('severity')
+        cve_id = finding.get('cve', {}).get('id')
+        severity = finding.get('cve', {}).get('severity')
         # Normalize the severity
-        if SEVERITY:
-            SEVERITY = SEVERITY if SEVERITY != 'UNKNOWN' else 'NONE'
+        if severity:
+            severity = severity if severity != 'UNKNOWN' else 'NONE'
 
         # Return the transformed finding
         return {
@@ -204,7 +199,7 @@ class Transformer:
                 'last_observed_on': finding.get('updated_timestamp'),
             },
             'id': finding['id'],
-            'cve': {'cves': [CVE_ID]} if CVE_ID else None,
+            'cve': {'cves': [cve_id]} if cve_id else None,
             'observations': observations if observations else None,
-            'exposure': {'severity': {'level': SEVERITY} if SEVERITY else None},
+            'exposure': {'severity': {'level': severity} if severity else None},
         }

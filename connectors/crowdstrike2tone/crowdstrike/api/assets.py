@@ -22,12 +22,14 @@ class AssetsAPI(APIEndpoint):
         Get all hosts
 
         Args:
-            limit (int): the number of items to return. This should never be more than
-            5000 as the following api call to get details only accepts max 5000
+            limit (int):
+                the number of items to return. This should never be more than 5000
+                as the following api call to get details only accepts max 5000
             sort (str, optional): the FQL sort parameter
-            last_seen_days (int, optional): the number of days back to search back
-            if filter isn't provided.
-            filter (str, optional): The filter string in FQL format to filter CS assets
+            last_seen_days (int, optional):
+                the number of days back to search back if filter isn't provided.
+            filter (str, optional):
+                The filter string in FQL format to filter CS assets
         Returns:
             CrowdstrikeAssetIterator
 

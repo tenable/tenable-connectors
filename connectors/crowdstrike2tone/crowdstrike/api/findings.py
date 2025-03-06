@@ -3,7 +3,7 @@ from typing import Literal, Optional
 import arrow
 from restfly.endpoint import APIEndpoint
 
-from crowdstrike.api.iterator import CrowdstrikeFindingIterator
+from .iterator import CrowdstrikeFindingIterator
 
 
 class FindingsAPI(APIEndpoint):
@@ -12,6 +12,8 @@ class FindingsAPI(APIEndpoint):
     Spotlight API. This API provides the ability to retrieve a list of vulnerabilities,
     sort and filter the results by specified criteria.
     """
+
+    _path = 'spotlight/combined/vulnerabilities/v1'
 
     def vulns(
         self,
@@ -23,19 +25,20 @@ class FindingsAPI(APIEndpoint):
         Retrieves a list of vulnerabilities.
 
         Args:
-            limit: The maximum number of items to return. Defaults to 100,
-                maximum of 5000.
-            sort: The sort parameter, either ``updated_timestamp|asc`` or
-                ``closed_timestamp|asc``. Defaults to ``None``.
-            filter: The filter string in FQL format to filter CS findings with.
+            limit:
+                The maximum number of items to return. Defaults to 100, maximum of 5000.
+            sort:
+                The sort parameter, either ``updated_timestamp|asc`` or ``closed_timestamp|asc``.
                 Defaults to ``None``.
-            facet: The list of fields to facet the results by. Defaults to ``None``.
+            filter:
+                The filter string in FQL format to filter CS findings with.
+                Defaults to ``None``.
+            facet:
+                The list of fields to facet the results by. Defaults to ``None``.
 
         Returns:
             CrowdstrikeFindingIterator
         """
-        _path = 'spotlight/combined/vulnerabilities/v1'
-
         status_filter = 'status:["open","reopen"]'
 
         if limit > 5000:
@@ -50,5 +53,5 @@ class FindingsAPI(APIEndpoint):
         )
         params['filter'] = f'updated_timestamp:>"{last_seen}"+{status_filter}'
         return CrowdstrikeFindingIterator(
-            self._api, _envelope='resources', _path=_path, _params=params
+            self._api, _envelope='resources', _path=self._path, _params=params
         )

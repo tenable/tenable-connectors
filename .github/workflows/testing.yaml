@@ -45,6 +45,12 @@ jobs:
           which python
 
       - name: Run Snyk
+        # If we accept data from an outside fork, the outside PR doesn't have access to the
+        # secrets for security reasons.  We will have to rely on the output from bandit within
+        # the container's test stage and then wait for the snyk run on the merge & deploy pipeline
+        # instead.  We will however still attempt to run on any "internal" PRs, so just continuing
+        # on an error here will allow the rest of the pipeline to run regardless of whom is committing.
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |

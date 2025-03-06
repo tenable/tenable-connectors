@@ -608,7 +608,7 @@ wheels = [
 ]
 
 [[package]]
-name = "rapidseven2tone"
+name = "rapid72tone"
 version = "1.0.0"
 source = { virtual = "." }
 dependencies = [

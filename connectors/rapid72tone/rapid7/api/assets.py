@@ -2,7 +2,7 @@ from typing import Optional
 
 from restfly.endpoint import APIEndpoint
 
-from rapidseven.api.iterator import RapidSevenIterator
+from rapid7.api.iterator import Rapid7Iterator
 
 
 class AssetsAPI(APIEndpoint):
@@ -12,7 +12,7 @@ class AssetsAPI(APIEndpoint):
         size: Optional[int] = 500,
         sort: Optional[str] = 'id,asc',
         **kwargs,
-    ) -> RapidSevenIterator:
+    ) -> Rapid7Iterator:
         """
         Get all hosts
 
@@ -25,7 +25,7 @@ class AssetsAPI(APIEndpoint):
                 The default sort order is ascending.
                 Multiple sort criteria can be specified using multiple sort query parameters.
         Returns:
-            RapidSevenIterator
+            Rapid7Iterator
         """  # noqa: E501
         _path = 'api/3/assets'
 
@@ -35,7 +35,7 @@ class AssetsAPI(APIEndpoint):
             'sort': sort,
         }
 
-        return RapidSevenIterator(
+        return Rapid7Iterator(
             self._api,
             _path=_path,
             _params=params,

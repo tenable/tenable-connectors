@@ -3,7 +3,7 @@ import responses
 from tenable.io.sync.models.cve_finding import CVEFinding
 from tenable.io.sync.models.device_asset import DeviceAsset
 
-from rapidseven.transform import Transformer
+from rapid7.transform import Transformer
 
 
 @pytest.fixture

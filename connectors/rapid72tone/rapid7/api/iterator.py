@@ -3,7 +3,7 @@ from typing import Any, Dict
 from restfly.iterator import APIIterator
 
 
-class RapidSevenIterator(APIIterator):
+class Rapid7Iterator(APIIterator):
     _path: str
     _params: Dict[str, Any]
 

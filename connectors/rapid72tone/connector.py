@@ -1,35 +1,38 @@
 #!/usr/bin/env python
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import AnyHttpUrl, Field, SecretStr
 from tenint import Connector, Credential, Settings, TenableCloudCredential
 
-from rapidseven.transform import Transformer
+from rapid7.transform import Transformer
 
 
-class RapidSevenCredential(Credential):
+class Rapid7Credential(Credential):
     """
-    RapidSeven Credentials
+    Rapid7 Credentials
     """
 
+    prefix: Literal['rapid7'] = 'rapid7'
+    name: Literal['Rapid7'] = 'Rapid7'
+    slug: Literal['rapid7'] = 'rapid7'
     url: Annotated[
         AnyHttpUrl,
-        Field(title='RapidSeven Site URL', description='A valid RapidSeven site URL'),
+        Field(title='Rapid7 Site URL', description='A valid Rapid7 site URL'),
     ]
     username: Annotated[
         str,
-        Field(title='Account Username', description='Rapid Seven Account Username'),
+        Field(title='Account Username', description='Rapid 7 Account Username'),
     ]
     password: Annotated[
         SecretStr,
-        Field(title='Account Password', description='Rapid Seven Account Password'),
+        Field(title='Account Password', description='Rapid 7 Account Password'),
     ]
-    description: str = 'RapidSeven Credentials'
+    description: str = 'Rapid7 Credentials'
 
 
 class AppSettings(Settings):
     """
-    RapidSeven Connector Settings
+    Rapid7 Connector Settings
     """
 
     import_findings: Annotated[
@@ -37,21 +40,21 @@ class AppSettings(Settings):
         Field(
             title='Import Findings',
             description=(
-                'Check Whether or Not To Import the Rapid Seven Vulnerability Findings',
+                'Check Whether or Not To Import the Rapid 7 Vulnerability Findings',
             ),
         ),
     ] = True
 
 
 connector = Connector(
-    settings=AppSettings, credentials=[RapidSevenCredential, TenableCloudCredential]
+    settings=AppSettings, credentials=[Rapid7Credential, TenableCloudCredential]
 )
 
 
 @connector.job
 def main(config: AppSettings, since: int | None = None):
     """
-    RapidSeven to Tenable One Connector
+    Rapid7 to Tenable One Connector
     """
     transformer = Transformer()
     counts = transformer.run(get_findings=config.import_findings)

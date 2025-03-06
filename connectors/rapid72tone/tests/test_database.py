@@ -1,4 +1,4 @@
-from rapidseven.database import Knowledgebase, init_db
+from rapid7.database import Knowledgebase, init_db
 
 
 def test_knowledgebase_model():

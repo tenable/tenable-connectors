@@ -2,7 +2,7 @@ from typing import Optional
 
 from restfly.endpoint import APIEndpoint
 
-from rapidseven.api.iterator import RapidSevenIterator
+from .iterator import Rapid7Iterator
 
 
 class FindingsAPI(APIEndpoint):
@@ -13,7 +13,7 @@ class FindingsAPI(APIEndpoint):
         size: Optional[int] = 500,
         sort: Optional[str] = 'id,asc',
         **kwargs,
-    ) -> RapidSevenIterator:
+    ) -> Rapid7Iterator:
         """
         Get all vulnerabilities for a specific asset
 
@@ -27,7 +27,7 @@ class FindingsAPI(APIEndpoint):
                 The default sort order is ascending.
                 Multiple sort criteria can be specified using multiple sort query parameters.
         Returns:
-            RapidSevenIterator
+            Rapid7Iterator
         """  # noqa: E501
         _path = f'api/3/assets/{asset_id}/vulnerabilities'
 
@@ -37,7 +37,7 @@ class FindingsAPI(APIEndpoint):
             'sort': sort,
         }
 
-        return RapidSevenIterator(
+        return Rapid7Iterator(
             self._api,
             _path=_path,
             _params=params,
@@ -49,7 +49,7 @@ class FindingsAPI(APIEndpoint):
         size: Optional[int] = 500,
         sort: Optional[str] = 'id,asc',
         **kwargs,
-    ) -> RapidSevenIterator:
+    ) -> Rapid7Iterator:
         """
         Get all vulnerabilities that can be scanned by Rapid7
 
@@ -62,7 +62,7 @@ class FindingsAPI(APIEndpoint):
                 The default sort order is ascending.
                 Multiple sort criteria can be specified using multiple sort query parameters.
         Returns:
-            RapidSevenIterator
+            Rapid7Iterator
         """  # noqa: E501
         _path = 'api/3/vulnerabilities'
 
@@ -72,7 +72,7 @@ class FindingsAPI(APIEndpoint):
             'sort': sort,
         }
 
-        return RapidSevenIterator(
+        return Rapid7Iterator(
             self._api,
             _path=_path,
             _params=params,

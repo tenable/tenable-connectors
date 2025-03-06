@@ -1,13 +1,12 @@
 import pytest
-import json
 from tenable.io import TenableIO
 
-from rapidseven.api.session import RapidSevenAPI
+from rapid7.api.session import Rapid7API
 
 
 @pytest.fixture
 def rsapi():
-    return RapidSevenAPI(
+    return Rapid7API(
         url='https://10.50.12.188:3780',
         username='Something',
         password='Something',
@@ -93,15 +92,15 @@ def asset():
                     },
                     {
                         'name': 'ssh.algorithms.hostkey',
-                        'value': 'rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ssh-ed25519',
+                        'value': 'rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ssh-ed25519',  # noqa: E501
                     },
                     {
                         'name': 'ssh.algorithms.kex',
-                        'value': 'sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,ext-info-s,kex-strict-s-v00@openssh.com',
+                        'value': 'sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,ext-info-s,kex-strict-s-v00@openssh.com',  # noqa: E501
                     },
                     {
                         'name': 'ssh.algorithms.mac',
-                        'value': 'hmac-sha1,umac-64@openssh.com,hmac-sha2-256,hmac-sha2-512',
+                        'value': 'hmac-sha1,umac-64@openssh.com,hmac-sha2-256,hmac-sha2-512',  # noqa: E501
                     },
                     {
                         'name': 'ssh.banner',
@@ -229,7 +228,7 @@ def asset_vuln():
         'results': [
             {
                 'port': 22,
-                'proof': '<p><ul><li>Running SSH service</li><li>Product OpenSSH exists -- OpenBSD OpenSSH 9.6p1</li><li>Vulnerable version of product OpenSSH found -- OpenBSD OpenSSH 9.6p1</li></ul><p>Vulnerable version of OpenSSH detected on Ubuntu Linux</p></p>',
+                'proof': '<p><ul><li>Running SSH service</li><li>Product OpenSSH exists -- OpenBSD OpenSSH 9.6p1</li><li>Vulnerable version of product OpenSSH found -- OpenBSD OpenSSH 9.6p1</li></ul><p>Vulnerable version of OpenSSH detected on Ubuntu Linux</p></p>',  # noqa: E501
                 'protocol': 'tcp',
                 'since': '2025-02-12T11:04:29.692Z',
                 'status': 'vulnerable-version',
@@ -291,8 +290,8 @@ def vuln_info():
         },
         'denialOfService': False,
         'description': {
-            'html': '<p>A security regression (CVE-2006-5051) was discovered in OpenSSH&#39;s server (sshd). There is a race condition which can lead sshd to handle some signals in an unsafe manner. An unauthenticated, remote attacker may be able to trigger it by failing to authenticate within a set time period.</p>',
-            'text': "A security regression (CVE-2006-5051) was discovered in OpenSSH's server (sshd). There is a race condition which can lead sshd to handle some signals in an unsafe manner. An unauthenticated, remote attacker may be able to trigger it by failing to authenticate within a set time period.",
+            'html': '<p>A security regression (CVE-2006-5051) was discovered in OpenSSH&#39;s server (sshd). There is a race condition which can lead sshd to handle some signals in an unsafe manner. An unauthenticated, remote attacker may be able to trigger it by failing to authenticate within a set time period.</p>',  # noqa: E501
+            'text': "A security regression (CVE-2006-5051) was discovered in OpenSSH's server (sshd). There is a race condition which can lead sshd to handle some signals in an unsafe manner. An unauthenticated, remote attacker may be able to trigger it by failing to authenticate within a set time period.",  # noqa: E501
         },
         'exploits': 0,
         'id': 'openbsd-openssh-cve-2024-6387',

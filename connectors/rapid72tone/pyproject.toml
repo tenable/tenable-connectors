@@ -1,7 +1,7 @@
 [project]
-name = "rapidseven2tone"
+name = "rapid72tone"
 version = "1.0.0"
-description = "RapidSeven -> Tenable One"
+description = "Rapid7 -> Tenable One"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
@@ -22,12 +22,12 @@ testing = [
 
 [project.urls]
 repository = "https://github.com/tenable/tenable-connectors"
-logo = "https://raw.githubusercontent.com/tenable/tenable-connectors/refs/heads/main/connectors/rapidseven2tone/logo.svg"
+logo = "https://raw.githubusercontent.com/tenable/tenable-connectors/refs/heads/main/connectors/rapid72tone/logo.svg"
 support = "https://community.tenable.com"
 
 [tool.tenint.connector]
-title = "RapidSeven to Tenable One"
-tags = ["rapidseven", "tvm"]
+title = "Rapid7 to Tenable One"
+tags = ["rapid7", "tvm"]
 
 
 [tool.ruff]
@@ -61,7 +61,7 @@ docstring-code-line-length = "dynamic"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "--cov=rapidseven --cov-report=term-missing"
+addopts = "--cov=rapid7 --cov-report=term-missing"
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.bandit]

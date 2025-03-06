@@ -8,7 +8,7 @@ from .assets import AssetsAPI
 from .findings import FindingsAPI
 
 
-class RapidSevenAPI(APISession):
+class Rapid7API(APISession):
     _box = True
     username: str | None = None
     password: str | None = None
@@ -21,9 +21,9 @@ class RapidSevenAPI(APISession):
 
     def __init__(self, **kwargs):
         params = (
-            ('url', os.environ.get('RAPIDSEVEN_URL')),
-            ('username', os.environ.get('RAPIDSEVEN_USERNAME')),
-            ('password', os.environ.get('RAPIDSEVEN_PASSWORD')),
+            ('url', os.environ.get('RAPID7_URL')),
+            ('username', os.environ.get('RAPID7_USERNAME')),
+            ('password', os.environ.get('RAPID7_PASSWORD')),
         )
         for key, envval in params:
             if envval and not kwargs.get(key):

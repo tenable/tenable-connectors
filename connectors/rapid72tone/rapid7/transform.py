@@ -6,7 +6,7 @@ from typing import Any
 from restfly.utils import trunc
 from tenable.io import TenableIO
 
-from rapidseven.api.session import RapidSevenAPI
+from rapid7.api.session import Rapid7API
 
 from . import __version__ as version
 from .database import Knowledgebase, init_db
@@ -19,7 +19,7 @@ class Transformer:
         self,
         db_uri: str = 'sqlite:///cache.db',
         tvm: TenableIO | None = None,
-        rapid7: RapidSevenAPI | None = None,
+        rapid7: Rapid7API | None = None,
     ) -> None:
         """
         Initialze transformer
@@ -27,18 +27,18 @@ class Transformer:
         Args:
             db_uri: The cache database location
             tvm: Optional TVM session to use
-            rapid7: Optional RapidSeven session to use
+            rapid7: Optional Rapid7 session to use
         """
         self.tvm = (
             tvm
             if tvm
             else TenableIO(
                 vendor='Tenable',
-                product='RapidSeven2ToneSyncConnector',
+                product='Rapid72ToneSyncConnector',
                 build=version,
             )
         )
-        self.rapid7 = rapid7 if rapid7 else RapidSevenAPI()
+        self.rapid7 = rapid7 if rapid7 else Rapid7API()
         self.log = logging.getLogger('Transformer')
         self.db = init_db(db_uri)
         self.counts = {}

@@ -132,7 +132,9 @@ def asset_details():
                 'assigned_date': '2024-12-08T00:06:08.857961164Z',
                 'policy_id': '0e31ef23c8d141c6b7950118aac92153',
                 'policy_type': 'host-retention',
-                'settings_hash': 'fce339fc6cbb4dae36929fe363a81368f4a7e3f2c3a3d62ff7e3ef202ee48df5',
+                'settings_hash': (
+                    'fce339fc6cbb4dae36929fe363a81368f4a7e3f2c3a3d62ff7e3ef202ee48df5'
+                ),
             },
             'prevention': {
                 'applied': False,
@@ -164,7 +166,9 @@ def asset_details():
         'external_ip': '8.8.8.8',
         'filesystem_containment_status': 'normal',
         'first_seen': '2024-12-08T00:05:01Z',
-        'group_hash': 'ead77444393c2a351deebf62b361eef72de1a99022e13a652e6c317242c98cd1',
+        'group_hash': (
+            'ead77444393c2a351deebf62b361eef72de1a99022e13a652e6c317242c98cd1'
+        ),
         'groups': ['2fd37c5cf03b48d69d2ce0a09d400dbd'],
         'hostname': 'ip-10-1-1-2.us-east-2.compute.internal',
         'instance_id': 'i-example4f7a67bed',
@@ -235,4 +239,64 @@ def asset_details_page_one(asset_details):
         },
         'resources': [asset_details],
         'errors': [],
+    }
+
+
+@pytest.fixture
+def finding_details():
+    return {
+        'id': '897580',
+        'cid': '2cc98',
+        'aid': '897580de18',
+        'vulnerability_id': 'CVE-2024-50222',
+        'data_providers': [{'provider': 'Falcon sensor'}],
+        'created_timestamp': '2025-01-09T09:12:55Z',
+        'updated_timestamp': '2025-02-21T00:48:53Z',
+        'status': 'Open',
+        'apps': [
+            {
+                'vendor_normalized': 'Ubuntu',
+                'product_name_version': 'linux-signed 6.8.0-51.52',
+                'product_name_normalized': 'linux-signed',
+                'sub_status': 'open',
+                'remediation': {},
+                'evaluation_logic': {'id': ''},
+            }
+        ],
+        'suppression_info': {'is_suppressed': False},
+        'confidence': 'confirmed',
+        'cve': {
+            'id': 'CVE-2024-50222',
+            'base_score': 7.8,
+            'severity': 'HIGH',
+            'exploit_status': 0,
+            'exprt_rating': 'MEDIUM',
+            'remediation_level': 'U',
+            'cisa_info': {'is_cisa_kev': False},
+            'spotlight_published_date': '2024-11-13T17:09:00Z',
+            'types': ['Vulnerability'],
+            'cwes': ['CWE-399'],
+            'description': (
+                'In the Linux kernel, the following vulnerability has outlived its '
+                'usefulness, and should just be removed?\n'
+            ),
+            'published_date': '2024-11-09T00:00:00Z',
+            'references': ['https://www.cve.org/CVERecord?id=CVE-2024-50222'],
+            'exploitability_score': 1.8,
+            'impact_score': 5.9,
+            'vector': 'CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H',
+        },
+    }
+
+
+@pytest.fixture
+def finding_details_page(finding_details):
+    return {
+        'meta': {
+            'query_time': 0.221030971,
+            'pagination': {'limit': 2, 'total': 3, 'after': 'example_after_token'},
+            'powered_by': 'finding-api',
+            'trace_id': 'example_trace_id',
+        },
+        'resources': [finding_details],
     }

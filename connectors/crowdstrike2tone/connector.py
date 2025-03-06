@@ -55,6 +55,16 @@ class AppSettings(Settings):
         int, Field(description='How many days back to get assets/findings', ge=1, le=7)
     ] = 1
 
+    import_findings: Annotated[
+        bool,
+        Field(
+            title='Import Findings',
+            description=(
+                'Check Whether or Not To Import the CrowdStrike Vulnerability Findings'
+            ),
+        ),
+    ] = True
+
 
 connector = Connector(
     settings=AppSettings, credentials=[CrowdstrikeCredential, TenableCloudCredential]
@@ -67,7 +77,9 @@ def main(config: AppSettings, since: int | None = None):
     Crowdstrike to Tenable One Connector
     """
     transformer = Transformer()
-    counts = transformer.run(get_findings=False, last_seen_days=config.last_seen_days)
+    counts = transformer.run(
+        get_findings=config.import_findings, last_seen_days=config.last_seen_days
+    )
     return {'counts': counts}
 
 

@@ -33,11 +33,3 @@ def test_asset_transformer(transformer, asset):
     assert (
         resp['device']['operating_system']['product']['version'] == '10.0 (build 22631)'
     )
-
-
-def test_categorized_ips_invalid_ip(transformer, asset):
-    asset['ipAddresses'] = ['invalid_ip']
-    with pytest.raises(
-        ValueError, match=f'{asset["ipAddresses"][0]} is not a valid IP Address'
-    ):
-        transformer.transform_asset(asset)

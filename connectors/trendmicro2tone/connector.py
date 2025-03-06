@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import AnyHttpUrl, Field, SecretStr
 from tenint import Connector, Credential, Settings, TenableCloudCredential
@@ -7,6 +7,9 @@ from trendmicro.transform import Transformer
 
 
 class TrendMicroCredential(Credential):
+    prefix: Literal['trendmicro'] = 'trendmicro'
+    name: Literal['Trend Micro'] = 'Trend Micro'
+    slug: Literal['trendmicro'] = 'trendmicro' 
     description: str = 'Trend Micro Credential'
 
     url: Annotated[

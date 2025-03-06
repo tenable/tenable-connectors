@@ -104,8 +104,8 @@ class Transformer:
             if value:
                 try:
                     ip = ip_address(value)
-                except ValueError as err:
-                    raise ValueError(f'{value} is not a valid IP Address') from err
+                except ValueError:
+                    self.log.debug(f'{ip} is not a valid IP Address')
                 else:
                     cname = ip.__class__.__name__
                     obj = {'address': str(ip)}

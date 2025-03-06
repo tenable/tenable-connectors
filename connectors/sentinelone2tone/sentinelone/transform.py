@@ -59,41 +59,39 @@ class Transformer:
 
         with job:
             self.log.info('Collecting assets')
-            count = 0
             for asset in self.s1.assets.list():
                 t1asset = self.asset_transformer(asset)
                 self.log.debug('Adding asset id=%s to the job' % t1asset['id'])
                 job.add(t1asset, object_type='device-asset')
-                count += 1
-            self.log.info(f'Imported {count} assets.')
+            self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
+            self.log.info(f'Imported {self.counts["assets"]} assets.')
 
-            if not get_findings:
-                return
+            if get_findings:
+                self.log.info('Collecting findings')
+                for app in self.s1.findings.apps_w_risk():
+                    cves, highest_severity = self.get_cves(app.applicationId)
+                    if len(cves) == 0:
+                        self.log.warning(
+                            f'Skipping app_id: {app.applicationId} as it has no cves.'
+                        )
+                        continue
+                    base_finding = self.finding_transformer(app, cves, highest_severity)
+                    for endpoint in self.s1.findings.endpoints_w_apps(
+                        [app.applicationId]
+                    ):
+                        t1finding = self.finding_endpoint_transformer(
+                            base_finding, endpoint
+                        )
+                        self.log.debug(
+                            'Adding finding id=%s to asset id=%s'
+                            % (t1finding.get('id'), t1finding.get('asset_id'))
+                        )
+                        job.add(t1finding, object_type='cve-finding')
+                self.counts['findings'] = {
+                    'sent': job.counters['cve-finding']['accepted']
+                }
+                self.log.info(f'Imported {self.counts["findings"]} findings.')
 
-            self.log.info('Collecting findings')
-            count = 0
-            for app in self.s1.findings.apps_w_risk():
-                cves, highest_severity = self.get_cves(app.applicationId)
-                if len(cves) == 0:
-                    self.log.warning(
-                        f'Skipping app_id: {app.applicationId} as it has no cves.'
-                    )
-                    continue
-                base_finding = self.finding_transformer(app, cves, highest_severity)
-                for endpoint in self.s1.findings.endpoints_w_apps([app.applicationId]):
-                    t1finding = self.finding_endpoint_transformer(
-                        base_finding, endpoint
-                    )
-                    self.log.debug(
-                        'Adding finding id=%s to asset id=%s'
-                        % (t1finding.get('id'), t1finding.get('asset_id'))
-                    )
-                    job.add(t1finding, object_type='cve-finding')
-                    count += 1
-            self.log.info(f'Imported {count} findings.')
-
-        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
-        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
         return self.counts
 
     def get_os_type(self, value: str | None) -> str | None:

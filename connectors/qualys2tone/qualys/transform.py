@@ -70,25 +70,23 @@ class Transformer:
                 t1asset = self.transform_asset(asset)
                 self.log.debug('Adding asset id=%s to the job' % t1asset['id'])
                 job.add(t1asset, object_type='device-asset')
+            self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
 
-            if not get_findings:
-                return
-            elif get_findings and get_kbs:
+            if get_findings and get_kbs:
                 self.cache_knowledgebase()
-
-            self.log.info('Processing Qualys vulnerabilities')
-            for host in self.qualys.findings.vuln():
-                for detection in host['detections']:
-                    finding = self.transform_finding(detection, host['id'])
-                    if finding:
-                        self.log.debug(
-                            'Adding finding id=%s to asset id=%s'
-                            % (finding['id'], host['id'])
-                        )
-                        job.add(finding, object_type='cve-finding')
-
-        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
-        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
+                self.log.info('Processing Qualys vulnerabilities')
+                for host in self.qualys.findings.vuln():
+                    for detection in host['detections']:
+                        finding = self.transform_finding(detection, host['id'])
+                        if finding:
+                            self.log.debug(
+                                'Adding finding id=%s to asset id=%s'
+                                % (finding['id'], host['id'])
+                            )
+                            job.add(finding, object_type='cve-finding')
+                self.counts['findings'] = {
+                    'sent': job.counters['cve-finding']['accepted']
+                }
         return self.counts
 
     def cache_knowledgebase(self) -> None:

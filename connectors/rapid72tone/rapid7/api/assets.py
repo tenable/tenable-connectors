@@ -2,7 +2,7 @@ from typing import Optional
 
 from restfly.endpoint import APIEndpoint
 
-from rapid7.api.iterator import Rapid7Iterator
+from .iterator import Rapid7Iterator
 
 
 class AssetsAPI(APIEndpoint):

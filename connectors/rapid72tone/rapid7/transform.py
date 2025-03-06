@@ -3,7 +3,6 @@ from hashlib import sha256
 from ipaddress import IPv4Address, ip_address
 from typing import Any
 
-from restfly.utils import trunc
 from tenable.io import TenableIO
 
 from rapid7.api.session import Rapid7API
@@ -181,10 +180,10 @@ class Transformer:
                     if asset['osCertainty']
                     else None,
                     'product': {
-                        'product_name': trunc(asset_os.get('product'), 32),
-                        'vendor_name': trunc(asset_os.get('vendor'), 32),
+                        'product_name': asset_os.get('product'),
+                        'vendor_name': asset_os.get('vendor'),
                         'cpe': asset_os.get('v2.3'),
-                        'version': trunc(asset_os.get('version'), 32),
+                        'version': asset_os.get('version'),
                     }
                     if asset_os_cpe
                     else None,
@@ -194,7 +193,7 @@ class Transformer:
                 'system_type': asset.get('type'),
             },
             'id': str(asset['id']),
-            'name': trunc(asset.hostname, 128) if asset.get('hostname') else None,
+            'name': asset.get('hostname'),
         }
 
         return ret

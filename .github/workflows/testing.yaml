@@ -62,7 +62,7 @@ jobs:
     name: connector ${{ matrix.connector }}
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: [connector-list, snyk]
+    needs: [connector-list]
     strategy:
       matrix:
         connector: ${{ fromJSON(needs.connector-list.outputs.connectors) }}

@@ -36,8 +36,10 @@ class Transformer:
             sync_id='tenable_microsoft_defender'
         )
         with job:
+            assets_map = {}
             for asset in self.cba.assets.list():
                 t1asset = self.transform_asset(asset)
+                assets_map[asset['name']] = asset['id']
                 self.log.debug(f'Adding asset_id={t1asset["id"]} to the job')
                 job.add(t1asset, object_type='device-asset')
             self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
@@ -47,11 +49,17 @@ class Transformer:
                     if not finding['affected_assets']:
                         continue
                     for asset in finding['affected_assets']:
-                        t1finding = self.transform_finding(finding, asset)
-                        self.log.debug(
-                            f'Adding findings for asset_id={asset}, vuln_id={t1finding.get("vuln_info", {}).get("cve_id")} to the job'
-                        )
-                        job.add(t1finding, object_type='cve-finding')
+                        asset_id = assets_map.get(asset)
+                        if asset_id:
+                            t1finding = self.transform_finding(finding, asset_id)
+                            self.log.debug(
+                                f'Adding findings for asset_id={asset_id}, vuln_id={t1finding.get("vuln_info", {}).get("cve_id")} to the job'
+                            )
+                            job.add(t1finding, object_type='cve-finding')
+                        else:
+                            self.log.debug(
+                                f'Skipping findings for asset_name={asset}, vuln_id={t1finding.get("vuln_info", {}).get("cve_id")} as asset id is not found.'
+                            )
                 self.counts['findings'] = {
                     'sent': job.counters['cve-finding']['accepted']
                 }
@@ -185,12 +193,14 @@ class Transformer:
             },
         }
 
-    def transform_finding(self, finding: dict, asset: str) -> dict:
+    def transform_finding(self, finding: dict, asset_id: str) -> dict:
         """
         Converts an Carbon Black vulnerability into a T1 compatable format.
         Args:
             finding (dict, required):
                 Finding object from the API response
+            asset_id (str):
+                ID of the asset
         Returns:
             dict:
                 T1 acceptable finding dict
@@ -200,7 +210,7 @@ class Transformer:
         cve_id = vuln_info['cve_id']
         return {
             'object_type': 'cve-finding',
-            'asset_id': asset,
+            'asset_id': asset_id,
             'id': cve_id,
             'definition_urn': f'urn:carbonblack:{cve_id}',
             'cve': {'cves': [cve_id]},

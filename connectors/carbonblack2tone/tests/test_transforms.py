@@ -54,7 +54,7 @@ def test_transform_finding(transformer, finding_details):
         'object_type': 'cve-finding',
         'asset_id': asset,
         'id': 'CVE-2009-5155',
-        'definition_urn': f'urn:carbonblack:CVE-2009-5155',
+        'definition_urn': 'urn:carbonblack:CVE-2009-5155',
         'cve': {'cves': ['CVE-2009-5155']},
         'observations': {
             'software': [
@@ -102,7 +102,7 @@ def test_derive_severity(transformer):
 
 def test_format_mac_address(transformer):
     assert transformer.format_mac_address('062b5b412d99') == ['06:2b:5b:41:2d:99']
-    assert transformer.format_mac_address(None) == None
+    assert transformer.format_mac_address(None) is None
 
 
 def test_validate_ip_address(transformer):
@@ -112,4 +112,4 @@ def test_validate_ip_address(transformer):
     assert transformer.validate_ip_address(
         '1050:0000:0000:0000:0005:0600:300c:326b', is_ipv4=False
     ) == [{'address': ip_address('1050:0000:0000:0000:0005:0600:300c:326b')}]
-    assert transformer.validate_ip_address(None, is_ipv4=True) == None
+    assert transformer.validate_ip_address(None, is_ipv4=True) is None

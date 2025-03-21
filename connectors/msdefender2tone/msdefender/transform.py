@@ -43,18 +43,19 @@ class Transformer:
                 t1asset = self.transform_asset(asset)
                 self.log.debug('Adding asset id=%s to the job' % t1asset['id'])
                 job.add(t1asset, object_type='device-asset')
-            if not get_findings:
-                return
-            for vuln in self.defender.findings.vulns():
-                finding = self.transform_finding(vuln)
-                self.log.debug(
-                    'Adding finding id=%s to asset id=%s'
-                    % (finding['id'], vuln['machineId'])
-                )
-                job.add(finding, object_type='cve-finding')
+            self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
+            if get_findings:
+                for vuln in self.defender.findings.vulns():
+                    finding = self.transform_finding(vuln)
+                    self.log.debug(
+                        'Adding finding id=%s to asset id=%s'
+                        % (finding['id'], vuln['machineId'])
+                    )
+                    job.add(finding, object_type='cve-finding')
+                self.counts['findings'] = {
+                    'sent': job.counters['cve-finding']['accepted']
+                }
 
-        self.counts['assets'] = {'sent': job.counters['device-asset']['accepted']}
-        self.counts['findings'] = {'sent': job.counters['cve-finding']['accepted']}
         return self.counts
 
     def get_network_info(self, data: dict[str, Any]) -> dict[str, list[str]]:
@@ -108,7 +109,7 @@ class Transformer:
         """
         type_map = {'windows': 'WINDOWS', 'linux': 'LINUX', 'macos': 'MAC_OS'}
         for key, value in type_map.items():
-            if system_type and system_type.lower() in key:
+            if key in system_type.lower():
                 return value
         return 'UNKNOWN'
 

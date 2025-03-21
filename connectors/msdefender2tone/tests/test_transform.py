@@ -29,7 +29,7 @@ def test_transform_asset(transformer, asset):
                     'product_name': 'oraclelinux',
                     'version': '9.0',
                 },
-                'type': 'UNKNOWN',
+                'type': 'LINUX',
             },
         },
         'discovery': {

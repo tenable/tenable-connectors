@@ -107,6 +107,8 @@ class Transformer:
         Attempts to derive the system type as required by the T1 Sync API.  If unsuccessful
         then we will return 'UNKNOWN'.
         """
+        if not system_type or not isinstance(system_type, str):
+            return 'UNKNOWN'
         type_map = {'windows': 'WINDOWS', 'linux': 'LINUX', 'macos': 'MAC_OS'}
         for key, value in type_map.items():
             if key in system_type.lower():

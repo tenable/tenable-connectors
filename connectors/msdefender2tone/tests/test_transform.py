@@ -74,3 +74,24 @@ def test_transform_finding(transformer, vuln):
     assert (
         CVEFinding(**finding).model_dump(exclude_none=True, mode='json') == tnx_finding
     )
+
+def test_derive_system_type(transformer):
+    assert transformer.derive_system_type('Windows') == 'WINDOWS'
+    assert transformer.derive_system_type('Linux') == 'LINUX'
+    assert transformer.derive_system_type('macOS') == 'MAC_OS'
+    assert transformer.derive_system_type('Solaris') == 'UNKNOWN'
+    assert transformer.derive_system_type('BSD') == 'UNKNOWN'
+    assert transformer.derive_system_type('AIX') == 'UNKNOWN'
+    assert transformer.derive_system_type('HP-UX') == 'UNKNOWN'
+    assert transformer.derive_system_type('Illumos') == 'UNKNOWN'
+    assert transformer.derive_system_type('FreeBSD') == 'UNKNOWN'
+    assert transformer.derive_system_type('OpenBSD') == 'UNKNOWN'
+    assert transformer.derive_system_type('NetBSD') == 'UNKNOWN'
+    assert transformer.derive_system_type('DragonFlyBSD') == 'UNKNOWN'
+    assert transformer.derive_system_type('Darwin') == 'UNKNOWN'
+    assert transformer.derive_system_type('Unix') == 'UNKNOWN'
+    assert transformer.derive_system_type('Unknown') == 'UNKNOWN'
+    assert transformer.derive_system_type('') == 'UNKNOWN'
+    assert transformer.derive_system_type(None) == 'UNKNOWN'
+    assert transformer.derive_system_type(1) == 'UNKNOWN'
+    assert transformer.derive_system_type(False) == 'UNKNOWN'
